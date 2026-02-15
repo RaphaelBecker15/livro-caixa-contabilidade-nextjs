@@ -1,7 +1,14 @@
-import { TrendingUp, TrendingDown, Wallet, ArrowLeft } from "lucide-react";
+import { TrendingUp, TrendingDown, Wallet, ArrowLeft, type LucideIcon } from "lucide-react";
+import Link from "next/link";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const StatCard = ({ label, value, icon: Icon, colorClass }: any) => (
+interface StatCardProps {
+    label: string,
+    value: string,
+    icon: LucideIcon,
+    colorClass: string
+}
+
+const StatCard = ({ label, value, icon: Icon, colorClass }: StatCardProps) => (
     <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
       <div>
         <p className="text-slate-500 text-xs font-semibold uppercase tracking-wide mb-1">{label}</p>
@@ -20,7 +27,9 @@ const LivroCaixa: React.FC = () => {
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <div className="p-2 hover:bg-slate-200 rounded-full transition-colors cursor-pointer">
-                        <ArrowLeft size={20} className="text-slate-600" />
+                        <Link href={"/admin/empresas"}>
+                            <ArrowLeft size={20} className="text-slate-600" />
+                        </Link>
                     </div>
                     <div>
                         <h1 className="text-2xl font-bold text-slate-900">Tech Solutions Ltda</h1>

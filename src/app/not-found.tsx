@@ -1,4 +1,3 @@
-// src/app/not-found.tsx
 import { FileQuestion } from "lucide-react";
 
 export default function NotFound() {
