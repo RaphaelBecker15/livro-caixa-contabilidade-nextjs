@@ -20,7 +20,17 @@ const StatCard = ({ label, value, icon: Icon, colorClass }: StatCardProps) => (
     </div>
 );
 
-const LivroCaixa: React.FC = () => {
+async function getCompanyData() {
+    return {
+        balance: { totalIncome: 0, totalExpense: 0, balance: 0 },
+        transactions: []
+    };
+}
+
+export default async function LivroCaixa() {
+
+    const { balance, transactions } = await getCompanyData();
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -40,54 +50,54 @@ const LivroCaixa: React.FC = () => {
 
             {/* Stats Cards (Specific to this company) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <StatCard label="Saldo Atual" value={'0,00'} icon={Wallet} colorClass="text-blue-600 bg-blue-50" />
-                <StatCard label="Entradas" value={'0,00'} icon={TrendingUp} colorClass="text-emerald-600 bg-emerald-50" />
-                <StatCard label="Saídas" value={'0,00'} icon={TrendingDown} colorClass="text-rose-600 bg-rose-50" />
+                <StatCard label="Saldo Atual" value={balance.balance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} icon={Wallet} colorClass="text-blue-600 bg-blue-50" />
+                <StatCard label="Entradas" value={balance.totalIncome.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} icon={TrendingUp} colorClass="text-emerald-600 bg-emerald-50" />
+                <StatCard label="Saídas" value={balance.totalExpense.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} icon={TrendingDown} colorClass="text-rose-600 bg-rose-50" />
             </div>
 
             {/* Transactions Table */}
             <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                 <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/50 flex justify-between items-center">
-                    <div className="flex items-center gap-6">
-                        <h3 className="font-semibold text-slate-800">Lançamentos</h3>
-                        <input className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all" type="month" value="2026-02"></input>
-                    </div>
-                    <span className="text-xs text-slate-500">Mostrando últimos lançamentos</span>
+                    <h3 className="font-semibold text-slate-800">Lançamentos</h3>
+                    <input className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all" type="month" value="2026-02"></input>
                 </div>
                 <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                    <thead className="bg-slate-50 border-b border-slate-200">
-                        <tr>
-                            <th className="px-6 py-4 font-semibold text-slate-700">Data</th>
-                            <th className="px-6 py-4 font-semibold text-slate-700">Descrição</th>
-                            <th className="px-6 py-4 font-semibold text-slate-700">Categoria</th>
-                            <th className="px-6 py-4 font-semibold text-slate-700">Tipo</th>
-                            <th className="px-6 py-4 font-semibold text-slate-700 text-right">Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                        <tr className='hover:bg-slate-50/50 transition-colors group'>
-                            <td className='px-6 py-4 whitespace-nowrap text-slate-600'>12/02/2026</td>
-                            <td className='px-6 py-4 font-medium text-slate-900'>Descrição...</td>
-                            <td className="px-6 py-4">
-                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">Categoria...</span>
-                            </td>
-                            <td className='px-6 py-4 font-medium text-emerald-600'>Entrada</td>
-                            <td className='px-6 py-4 text-right font-bold text-emerald-600'>
-                                0,00
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan={7} className="px-6 py-12 text-center text-slate-400">
-                                Nenhum lançamento encontrado.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <table className="w-full text-left text-sm">
+                        <thead className="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th className="px-6 py-4 font-semibold text-slate-700">Data</th>
+                                <th className="px-6 py-4 font-semibold text-slate-700">Descrição</th>
+                                <th className="px-6 py-4 font-semibold text-slate-700">Categoria</th>
+                                <th className="px-6 py-4 font-semibold text-slate-700">Tipo</th>
+                                <th className="px-6 py-4 font-semibold text-slate-700 text-right">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                            {transactions.length > 0 ? (
+                                transactions.map((tx: any) => (
+                                    <tr key={tx.id} className='hover:bg-slate-50/50 transition-colors group'>
+                                        <td className='px-6 py-4 font-medium text-sm'>{new Date(tx.date).toLocaleDateString('pt-BR')}</td>
+                                        <td className='px-6 py-4 font-medium text-sm'>{tx.description}</td>
+                                        <td className="px-6 py-4">
+                                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">{tx.category?.name || 'Sem categoria'}</span>
+                                        </td>
+                                        <td className={`px-6 py-4 font-medium ${tx.type === 'INCOME' ? 'text-emerald-600' : 'text-rose-600'}`}>{tx.type === 'ENTRADA' ? 'Entrada' : 'Saída'}</td>
+                                        <td className={`px-6 py-4 text-right font-bold ${tx.type === 'INCOME' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                            {parseFloat(tx.amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
+                                        Nenhum lançamento encontrado.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     )
 }
-
-export default LivroCaixa;
