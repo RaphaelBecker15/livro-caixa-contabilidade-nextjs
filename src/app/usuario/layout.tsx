@@ -1,6 +1,6 @@
 import LayoutUser from "@/components/LayoutUser";
 
-export default function AdminLayout({
+export default function UserLayout({
   children,
 }: {
   children: React.ReactNode;

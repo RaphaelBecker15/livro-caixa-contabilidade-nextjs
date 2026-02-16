@@ -1,11 +1,14 @@
-"use client";
-import { useState } from "react";
-import { Pencil, Trash2, Plus, Search, UserRound, Save } from "lucide-react";
-import Modal from "@/components/Modal";
+import { Search, UserRound } from "lucide-react";
+import { AddUserButton } from "@/components/admin/AddUserButton";
+import { UserActionButtons } from "@/components/admin/UserActionButtons";
 
-const Usuarios: React.FC = () => {
+async function getUsers() {
+    return [];
+}
 
-    const [openModal, setOpenModal] = useState(false);
+export default async function Usuarios() {
+
+    const users = await getUsers();
 
     return (
         <div className="space-y-6">
@@ -13,9 +16,7 @@ const Usuarios: React.FC = () => {
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900">Gerenciar Usuários</h1>
                 </div>
-                <button onClick={() => setOpenModal(true)} className="cursor-pointer bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2 shadow-sm">
-                    <Plus size={18} /> Novo Usuário
-                </button>
+                <AddUserButton/>
             </div>
 
             {/* Filters */}
@@ -42,62 +43,35 @@ const Usuarios: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            <tr className="hover:bg-slate-50/50 transition-colors">
-                                <td className="px-6 py-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="p-2 bg-slate-100 rounded-lg text-slate-500">
-                                            <UserRound size={20} />
-                                        </div>
-                                        <span className="font-medium text-sm">Raphael</span>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4 text-slate-600 font-medium text-sm">fiscal3@rezendetransportes.com.br</td>
-                                <td className="px-6 py-4 text-slate-600 font-medium text-sm">Fiscal</td>
-                                <td className="px-6 py-4 text-right">
-                                    <div className="flex items-center justify-end gap-2">
-                                        <button className="cursor-pointer p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Editar">
-                                            <Pencil size={18} />
-                                        </button>
-                                        <button className="cursor-pointer p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" title="Excluir">
-                                            <Trash2 size={18} />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
-                                    Nenhuma usuário encontrado.
-                                </td>
-                            </tr>
+                            {users.length > 0 ? (
+                                users.map((user: any) => (
+                                    <tr key={user.id} className="hover:bg-slate-50/50 transition-colors">
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-2 bg-slate-100 rounded-lg text-slate-500">
+                                                    <UserRound size={20} />
+                                                </div>
+                                                <span className="font-medium text-sm">{user.name}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-slate-600 font-medium text-sm">{user.email}</td>
+                                        <td className="px-6 py-4 text-slate-600 font-medium text-sm">{user.function}</td>
+                                        <td className="px-6 py-4 text-right">
+                                            <UserActionButtons userId={user.id}/>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
+                                        Nenhuma usuário encontrado.
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
             </div>
-            <Modal isOpen={openModal} setModalOpen={() => setOpenModal(!openModal)} setTittle={"Novo Usuário"}>
-                <form className="p-6 space-y-4">
-                    <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-1">Nome</label>
-                        <input required type="text" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-black-500 outline-none transition-all"/>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-1">Email</label>
-                        <input required type="text" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-black-500 outline-none transition-all font-mono"/>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-1">Função/Cargo</label>
-                        <input required type="text" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-black-500 outline-none transition-all font-mono"/>
-                    </div>
-
-                    <div className="pt-4 flex justify-end gap-3">
-                        <button type="button" onClick={() => setOpenModal(false)} className="cursor-pointer px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-medium transition-colors">Cancelar</button>
-                        <button type="submit" className="cursor-pointer px-6 py-2 bg-slate-900 text-white hover:bg-emerald-600 rounded-lg font-bold flex items-center gap-2 transition-all shadow-md">
-                            <Save size={18}/> Salvar
-                        </button>
-                    </div>
-                </form>
-            </Modal>
         </div>
     )
 }
-
-export default Usuarios;

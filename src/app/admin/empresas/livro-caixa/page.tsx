@@ -48,7 +48,10 @@ const LivroCaixa: React.FC = () => {
             {/* Transactions Table */}
             <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                 <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/50 flex justify-between items-center">
-                    <h3 className="font-semibold text-slate-800">Lançamentos</h3>
+                    <div className="flex items-center gap-6">
+                        <h3 className="font-semibold text-slate-800">Lançamentos</h3>
+                        <input className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all" type="month" value="2026-02"></input>
+                    </div>
                     <span className="text-xs text-slate-500">Mostrando últimos lançamentos</span>
                 </div>
                 <div className="overflow-x-auto">
