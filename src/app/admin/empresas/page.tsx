@@ -1,14 +1,15 @@
 import { Building2, Search } from "lucide-react";
 import { AddCompanyButton } from "@/components/admin/AddCompanyButton";
 import { CompanyActionButtons } from "@/components/admin/CompanyActionButtons";
+import { companies } from "@/lib/mock-data";
 
-async function getCompanies() {
+/*async function getCompanies() {
     return [];
-}
+}*/
 
 export default async function Empresas() {
 
-    const companies = await getCompanies();
+    /*const companies = await getUsers();*/
 
     return (
         <div className="space-y-6">
@@ -50,7 +51,7 @@ export default async function Empresas() {
                                                 <div className="p-2 bg-slate-100 rounded-lg text-slate-500">
                                                     <Building2 size={20} />
                                                 </div>
-                                                <span className="font-medium text-sm">{company.name}</span>
+                                                <span className="font-medium text-sm">{company.nome}</span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-slate-600 font-medium text-sm">{company.cnpj}</td>

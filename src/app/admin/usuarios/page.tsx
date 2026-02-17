@@ -1,14 +1,15 @@
 import { Search, UserRound } from "lucide-react";
 import { AddUserButton } from "@/components/admin/AddUserButton";
 import { UserActionButtons } from "@/components/admin/UserActionButtons";
+import { users } from "@/lib/mock-data";
 
-async function getUsers() {
+/*async function getUsers() {
     return [];
-}
+}*/
 
 export default async function Usuarios() {
 
-    const users = await getUsers();
+    /*const users = await getUsers();*/
 
     return (
         <div className="space-y-6">
@@ -51,11 +52,11 @@ export default async function Usuarios() {
                                                 <div className="p-2 bg-slate-100 rounded-lg text-slate-500">
                                                     <UserRound size={20} />
                                                 </div>
-                                                <span className="font-medium text-sm">{user.name}</span>
+                                                <span className="font-medium text-sm">{user.nome}</span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-slate-600 font-medium text-sm">{user.email}</td>
-                                        <td className="px-6 py-4 text-slate-600 font-medium text-sm">{user.function}</td>
+                                        <td className="px-6 py-4 text-slate-600 font-medium text-sm">{user.cargo}</td>
                                         <td className="px-6 py-4 text-right">
                                             <UserActionButtons userId={user.id}/>
                                         </td>
