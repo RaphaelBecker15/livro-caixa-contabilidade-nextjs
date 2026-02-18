@@ -36,11 +36,11 @@ export default async function LivroCaixa() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    <div className="p-2 hover:bg-slate-200 rounded-full transition-colors cursor-pointer">
-                        <Link href={"/admin/empresas"}>
+                    <Link href={"/admin/empresas"}>
+                        <div className="p-2 hover:bg-slate-200 rounded-full transition-colors cursor-pointer">
                             <ArrowLeft size={20} className="text-slate-600" />
-                        </Link>
-                    </div>
+                        </div>
+                    </Link>
                     <div>
                         <h1 className="text-2xl font-bold text-slate-900">Tech Solutions Ltda</h1>
                         <p className="text-sm text-slate-500">CNPJ: 12.345.678/0001-90</p>

@@ -1,16 +1,9 @@
 import { Building2, Search } from "lucide-react";
-import { AddCompanyButton } from "@/components/admin/AddCompanyButton";
-import { CompanyActionButtons } from "@/components/admin/CompanyActionButtons";
+import { AddCompanyButton } from "@/components/admin/empresas/AddCompanyButton";
+import { CompanyActionButtons } from "@/components/admin/empresas/CompanyActionButtons";
 import { companies } from "@/lib/mock-data";
 
-/*async function getCompanies() {
-    return [];
-}*/
-
 export default async function Empresas() {
-
-    /*const companies = await getUsers();*/
-
     return (
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -56,7 +49,7 @@ export default async function Empresas() {
                                         </td>
                                         <td className="px-6 py-4 text-slate-600 font-medium text-sm">{company.cnpj}</td>
                                         <td className="px-6 py-4 text-right">
-                                            <CompanyActionButtons companyId={company.id}/>
+                                            <CompanyActionButtons id={company.id}/>
                                         </td>
                                     </tr>
                                 ))

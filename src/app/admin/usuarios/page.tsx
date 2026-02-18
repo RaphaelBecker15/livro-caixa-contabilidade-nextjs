@@ -1,16 +1,8 @@
-import { Search, UserRound } from "lucide-react";
-import { AddUserButton } from "@/components/admin/AddUserButton";
-import { UserActionButtons } from "@/components/admin/UserActionButtons";
-import { users } from "@/lib/mock-data";
+import { Search } from "lucide-react";
+import { AddUserButton } from "@/components/admin/usuarios/AddUserButton";
+import { UsuariosClient } from "@/app/admin/UsuariosClient";
 
-/*async function getUsers() {
-    return [];
-}*/
-
-export default async function Usuarios() {
-
-    /*const users = await getUsers();*/
-
+export default function Usuarios() {
     return (
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -34,43 +26,7 @@ export default async function Usuarios() {
             {/*Tabela*/}
             <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm">
-                        <thead className="bg-slate-50 border-b border-slate-200">
-                            <tr>
-                                <th className="px-6 py-4 font-semibold text-slate-700">Nome</th>
-                                <th className="px-6 py-4 font-semibold text-slate-700">Email</th>
-                                <th className="px-6 py-4 font-semibold text-slate-700">Função/Cargo</th>
-                                <th className="px-6 py-4 font-semibold text-slate-700 text-right">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100">
-                            {users.length > 0 ? (
-                                users.map((user: any) => (
-                                    <tr key={user.id} className="hover:bg-slate-50/50 transition-colors">
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="p-2 bg-slate-100 rounded-lg text-slate-500">
-                                                    <UserRound size={20} />
-                                                </div>
-                                                <span className="font-medium text-sm">{user.nome}</span>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 text-slate-600 font-medium text-sm">{user.email}</td>
-                                        <td className="px-6 py-4 text-slate-600 font-medium text-sm">{user.cargo}</td>
-                                        <td className="px-6 py-4 text-right">
-                                            <UserActionButtons userId={user.id}/>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
-                                        Nenhuma usuário encontrado.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                    <UsuariosClient/>
                 </div>
             </div>
         </div>

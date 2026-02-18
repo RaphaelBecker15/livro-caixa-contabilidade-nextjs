@@ -1,3 +1,20 @@
+export type Usuario = {
+    id: string
+    nome: string
+    email: string
+    cargo: string
+}
+
+export type Transacao = {
+    id: string
+    valor: number
+    tipo: 'ENTRADA' | 'SAIDA'
+    descricao: string
+    data: string
+    categoriaId: string
+    empresaId: string
+}
+
 export const transactions = [
     {
         id: '1',
@@ -46,7 +63,7 @@ export const companies = [
     },
 ]
 
-export const users = [
+export const users: Usuario[] = [
     {
         id: 'user-1',
         nome: 'Raphael',

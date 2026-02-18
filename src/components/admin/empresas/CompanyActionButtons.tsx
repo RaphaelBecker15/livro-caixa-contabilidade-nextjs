@@ -3,22 +3,22 @@ import { ExternalLink, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface CompanyActionButtonsProps {
-    companyId: string;
+    id: string;
 }
 
-export function CompanyActionButtons({ companyId }: CompanyActionButtonsProps) {
+export function CompanyActionButtons({ id }: CompanyActionButtonsProps) {
     const router = useRouter();
 
     const handleView = () => {
-        router.push(`/admin/empresas/livro-caixa?companyId=${companyId}`);
+        router.push(`/admin/empresas/livro-caixa?id=${id}`);
     };
 
     const handleEdit = () => {
-        console.log('Editar empresa:', companyId);
+        console.log('Editar empresa:', id);
     };
 
     const handleDelete = () => {
-        console.log('Excluir empresa:', companyId);
+        console.log('Excluir empresa:', id);
     };
 
     return (
