@@ -15,6 +15,12 @@ export type Transacao = {
     empresaId: string
 }
 
+export type Empresa = {
+    id: string
+    nome: string
+    cnpj: string
+}
+
 export const transactions = [
     {
         id: '1',
@@ -45,7 +51,7 @@ export const transactions = [
     }
 ]
 
-export const companies = [
+export const empresas: Empresa[] = [
     {
         id: 'company-1',
         nome: 'Rezende Transportes',

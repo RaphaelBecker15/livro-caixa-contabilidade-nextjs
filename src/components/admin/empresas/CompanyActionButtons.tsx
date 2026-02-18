@@ -1,35 +1,28 @@
 "use client";
 import { ExternalLink, Pencil, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useEmpresas } from "@/contexts/ApiEmpresasContext";
 
 interface CompanyActionButtonsProps {
     id: string;
 }
 
 export function CompanyActionButtons({ id }: CompanyActionButtonsProps) {
-    const router = useRouter();
+    
+    const { empresas, abrirModalEditar, abrirModalExcluir} = useEmpresas()
 
-    const handleView = () => {
-        router.push(`/admin/empresas/livro-caixa?id=${id}`);
-    };
+    const empresa = empresas.find(u => u.id === id)
 
-    const handleEdit = () => {
-        console.log('Editar empresa:', id);
-    };
-
-    const handleDelete = () => {
-        console.log('Excluir empresa:', id);
-    };
+    if(!empresa) return null
 
     return (
         <div className="flex items-center justify-end gap-2">
-            <button onClick={handleView} className="cursor-pointer p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Ver Livro Caixa">
+            <button className="cursor-pointer p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Ver Livro Caixa">
                 <ExternalLink size={18} />
             </button>
-            <button onClick={handleEdit} className="cursor-pointer p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Editar">
+            <button onClick={() => abrirModalEditar(empresa)} className="cursor-pointer p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Editar">
                 <Pencil size={18} />
             </button>
-            <button onClick={handleDelete} className="cursor-pointer p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" title="Excluir">
+            <button onClick={() => abrirModalExcluir(empresa)} className="cursor-pointer p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" title="Excluir">
                 <Trash2 size={18} />
             </button>
         </div>
