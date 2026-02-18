@@ -8,10 +8,11 @@ export type Usuario = {
 export type Transacao = {
     id: string
     valor: number
-    tipo: 'ENTRADA' | 'SAIDA'
+    tipo: string
     descricao: string
     data: string
-    categoriaId: string
+    categoria: string
+    anexo: string
     empresaId: string
 }
 
@@ -21,33 +22,56 @@ export type Empresa = {
     cnpj: string
 }
 
-export const transactions = [
+export const transacoes = [
     {
         id: '1',
         valor: 1500.00,
         tipo: 'entrada',
-        descricao: 'Salário',
+        descricao: 'Salário de 1500 reais',
         data: '2024-02-01',
-        categoriaId: 'cat-1',
-        userId: 'user-1'
+        categoria: 'Salário',
+        anexo: 'link do anexo',
+        empresaId: 'company-1'
     },
     {
         id: '2',
         valor: 350.00,
         tipo: 'saida',
-        descricao: 'Aluguel',
+        descricao: 'Aluguel de 350 reais',
         data: '2024-02-05',
-        categoriaId: 'cat-2',
-        userId: 'user-1'
+        categoria: 'Aluguel',
+        anexo: 'link do anexo',
+        empresaId: 'company-1'
     },
     {
         id: '3',
+        valor: 357.00,
+        tipo: 'saida',
+        descricao: 'Aluguel de 350 reais',
+        data: '2024-02-05',
+        categoria: 'Aluguel',
+        anexo: 'link do anexo',
+        empresaId: 'company-3'
+    },
+    {
+        id: '4',
         valor: 120.50,
         tipo: 'saida',
-        descricao: 'Supermercado',
+        descricao: 'Compra de 120,50',
         data: '2024-02-10',
-        categoriaId: 'cat-3',
-        userId: 'user-1'
+        categoria: 'Supermercado',
+        anexo: 'link do anexo',
+        empresaId: 'company-1'
+    },
+    {
+        id: '5',
+        valor: 122.50,
+        tipo: 'saida',
+        descricao: 'Compra de 120,50',
+        data: '2024-02-10',
+        categoria: 'Supermercado',
+        anexo: 'link do anexo',
+        empresaId: 'company-2'
     }
 ]
 

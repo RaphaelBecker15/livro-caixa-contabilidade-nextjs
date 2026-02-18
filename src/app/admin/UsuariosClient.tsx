@@ -1,5 +1,5 @@
 "use client";
-import { useUsuarios } from "@/contexts/ApiUsuariosContext";
+import { useUsuarios } from "@/contexts/admin/ApiUsuariosContext";
 import { UserActionButtons } from "@/components/admin/usuarios/UserActionButtons";
 import { UserRound } from "lucide-react";
 import { EditUserModal } from "@/components/admin/usuarios/EditUserModal";

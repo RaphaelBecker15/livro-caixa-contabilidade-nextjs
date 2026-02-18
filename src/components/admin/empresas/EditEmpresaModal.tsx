@@ -1,7 +1,7 @@
 "use client";
 import { Save } from "lucide-react";
 import Modal from "@/components/Modal";
-import { useEmpresas } from "@/contexts/ApiEmpresasContext";
+import { useEmpresas } from "@/contexts/admin/ApiEmpresasContext";
 import { useState } from "react";
 
 export function EditEmpresaModal() {

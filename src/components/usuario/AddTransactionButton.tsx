@@ -36,7 +36,7 @@ export function AddTransactionButton() {
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-1">Categoria</label>
-                        <input required placeholder="" type="text" className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-black-500 outline-none"/>
+                        <input required type="text" className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-black-500 outline-none"/>
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-1">Recibo/Nota (Opcional)</label>

@@ -1,5 +1,5 @@
 "use client";
-import { useEmpresas } from "@/contexts/ApiEmpresasContext";
+import { useEmpresas } from "@/contexts/admin/ApiEmpresasContext";
 import { CompanyActionButtons } from "@/components/admin/empresas/CompanyActionButtons";
 import { Building2 } from "lucide-react";
 import { EditEmpresaModal } from "@/components/admin/empresas/EditEmpresaModal";

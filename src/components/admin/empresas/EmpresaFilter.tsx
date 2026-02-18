@@ -1,6 +1,6 @@
 "use client";
 import { Search } from "lucide-react";
-import { useEmpresas } from "@/contexts/ApiEmpresasContext";
+import { useEmpresas } from "@/contexts/admin/ApiEmpresasContext";
 
 export function EmpresaFilter() {
 

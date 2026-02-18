@@ -1,6 +1,6 @@
 "use client";
 import { Search } from "lucide-react";
-import { useUsuarios } from "@/contexts/ApiUsuariosContext";
+import { useUsuarios } from "@/contexts/admin/ApiUsuariosContext";
 
 export function UserFilter() {
 

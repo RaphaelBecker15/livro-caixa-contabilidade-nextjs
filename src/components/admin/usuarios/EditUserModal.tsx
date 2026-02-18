@@ -1,7 +1,7 @@
 "use client";
 import { Save } from "lucide-react";
 import Modal from "@/components/Modal";
-import { useUsuarios } from "@/contexts/ApiUsuariosContext";
+import { useUsuarios } from "@/contexts/admin/ApiUsuariosContext";
 import { useState } from "react";
 
 export function EditUserModal() {

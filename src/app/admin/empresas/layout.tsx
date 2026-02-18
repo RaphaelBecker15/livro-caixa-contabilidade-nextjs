@@ -1,4 +1,4 @@
-import { EmpresasProvider } from "@/contexts/ApiEmpresasContext";
+import { EmpresasProvider } from "@/contexts/admin/ApiEmpresasContext";
 import { ReactNode } from "react";
 
 export default function EmpresasLayout({ children }: { children: ReactNode }) {

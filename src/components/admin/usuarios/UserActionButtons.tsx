@@ -1,6 +1,6 @@
 "use client";
 import { Pencil, Trash2 } from "lucide-react";
-import { useUsuarios } from "@/contexts/ApiUsuariosContext";
+import { useUsuarios } from "@/contexts/admin/ApiUsuariosContext";
 
 interface UserActionButtonsProps {
     id: string;

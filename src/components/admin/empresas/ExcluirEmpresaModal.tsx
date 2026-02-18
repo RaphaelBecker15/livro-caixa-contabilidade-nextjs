@@ -1,6 +1,6 @@
 "use client";
 import Modal from "@/components/Modal";
-import { useEmpresas } from "@/contexts/ApiEmpresasContext";
+import { useEmpresas } from "@/contexts/admin/ApiEmpresasContext";
 
 export function ExcluirEmpresaModal() {
 

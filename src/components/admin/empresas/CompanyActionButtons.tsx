@@ -1,6 +1,6 @@
 "use client";
 import { ExternalLink, Pencil, Trash2 } from "lucide-react";
-import { useEmpresas } from "@/contexts/ApiEmpresasContext";
+import { useEmpresas } from "@/contexts/admin/ApiEmpresasContext";
 
 interface CompanyActionButtonsProps {
     id: string;
