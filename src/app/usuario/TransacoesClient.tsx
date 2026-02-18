@@ -4,8 +4,24 @@ import { TransactionActionButtons } from "@/components/usuario/TransactionAction
 import { EditTransacaoModal } from "@/components/usuario/EditTransacaoModal";
 import { ExcluirTransacaoModal } from "@/components/usuario/ExcluirTransacaoModal";
 
-export function TransacoesClient() {
+interface TransacoesProps {
+    id: string
+    valor: number
+    tipo: string
+    descricao: string
+    data: string
+    categoria: string
+    anexo: string
+    empresaId: string
+}
+
+export function TransacoesClient({ EmpresaLogada }: { EmpresaLogada: string }) {
+
     const { transacoes, transacaoEmEdicao } = useTransacoes()
+
+    const transacoesFiltradas = transacoes.filter((e) => {
+        return e.empresaId == EmpresaLogada;
+    })
 
     return (
         <>
@@ -26,20 +42,20 @@ export function TransacoesClient() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                        {transacoes.length > 0 ? (
-                            transacoes.map((tx: any) => (
+                        {transacoesFiltradas.length > 0 ? (
+                            transacoesFiltradas.map((tx: TransacoesProps) => (
                                 <tr key={tx.id} className='hover:bg-slate-50/50 transition-colors group'>
-                                    <td className='px-6 py-4 font-medium text-sm'>{new Date(tx.date).toLocaleDateString('pt-BR')}</td>
-                                    <td className='px-6 py-4 font-medium text-sm'>{tx.description}</td>
+                                    <td className='px-6 py-4 font-medium text-sm'>{new Date(tx.data + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
+                                    <td className='px-6 py-4 font-medium text-sm'>{tx.descricao}</td>
                                     <td className="px-6 py-4">
-                                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">{tx.category?.name || 'Sem categoria'}</span>
+                                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">{tx.categoria || 'Sem categoria'}</span>
                                     </td>
-                                    <td className={`px-6 py-4 font-medium ${tx.type === 'entrada' ? 'text-emerald-600' : 'text-rose-600'}`}>{tx.type}</td>
-                                    <td className={`px-6 py-4 text-right font-bold ${tx.type === 'entrada' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                                        {parseFloat(tx.amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                    <td className={`px-6 py-4 font-medium ${tx.tipo === 'entrada' ? 'text-emerald-600' : 'text-rose-600'}`}>{tx.tipo}</td>
+                                    <td className={`px-6 py-4 text-right font-bold ${tx.tipo === 'entrada' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                        {tx.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <TransactionActionButtons transactionId={tx.id} />
+                                        <TransactionActionButtons id={tx.id} />
                                     </td>
                                 </tr>
                             ))

@@ -87,4 +87,6 @@ export function useTransacoes() {
     if(!context) {
         throw new Error("useTransacoes precisa estar dentro de TransacoesProvider")
     }
+
+    return context
 }

@@ -8,6 +8,21 @@ interface StatCardProps {
     colorClass: string
 }
 
+interface TransacoesProps {
+    id: string
+    valor: number
+    tipo: string
+    descricao: string
+    data: string
+    categoria: string
+    anexo: string
+    empresaId: string
+}
+
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
 const StatCard = ({ label, value, icon: Icon, colorClass }: StatCardProps) => (
     <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
       <div>
@@ -20,17 +35,7 @@ const StatCard = ({ label, value, icon: Icon, colorClass }: StatCardProps) => (
     </div>
 );
 
-async function getCompanyData() {
-    return {
-        balance: { totalIncome: 0, totalExpense: 0, balance: 0 },
-        transactions: []
-    };
-}
-
-export default async function LivroCaixa() {
-
-    const { balance, transactions } = await getCompanyData();
-
+export default function LivroCaixa({ params }: PageProps) {
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -50,9 +55,9 @@ export default async function LivroCaixa() {
 
             {/* Stats Cards (Specific to this company) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <StatCard label="Saldo Atual" value={balance.balance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} icon={Wallet} colorClass="text-blue-600 bg-blue-50" />
-                <StatCard label="Entradas" value={balance.totalIncome.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} icon={TrendingUp} colorClass="text-emerald-600 bg-emerald-50" />
-                <StatCard label="Saídas" value={balance.totalExpense.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} icon={TrendingDown} colorClass="text-rose-600 bg-rose-50" />
+                <StatCard label="Saldo Atual" value={'0,00'} icon={Wallet} colorClass="text-blue-600 bg-blue-50" />
+                <StatCard label="Entradas" value={'0,00'} icon={TrendingUp} colorClass="text-emerald-600 bg-emerald-50" />
+                <StatCard label="Saídas" value={'0,00'} icon={TrendingDown} colorClass="text-rose-600 bg-rose-50" />
             </div>
 
             {/* Transactions Table */}
@@ -73,17 +78,17 @@ export default async function LivroCaixa() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {transactions.length > 0 ? (
-                                transactions.map((tx: any) => (
+                            {transacoes.length > 0 ? (
+                                transacoes.map((tx: TransacoesProps) => (
                                     <tr key={tx.id} className='hover:bg-slate-50/50 transition-colors group'>
-                                        <td className='px-6 py-4 font-medium text-sm'>{new Date(tx.date).toLocaleDateString('pt-BR')}</td>
-                                        <td className='px-6 py-4 font-medium text-sm'>{tx.description}</td>
+                                        <td className='px-6 py-4 font-medium text-sm'>{new Date(tx.data).toLocaleDateString('pt-BR')}</td>
+                                        <td className='px-6 py-4 font-medium text-sm'>{tx.descricao}</td>
                                         <td className="px-6 py-4">
-                                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">{tx.category?.name || 'Sem categoria'}</span>
+                                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">{tx.categoria || 'Sem categoria'}</span>
                                         </td>
-                                        <td className={`px-6 py-4 font-medium ${tx.type === 'INCOME' ? 'text-emerald-600' : 'text-rose-600'}`}>{tx.type === 'ENTRADA' ? 'Entrada' : 'Saída'}</td>
-                                        <td className={`px-6 py-4 text-right font-bold ${tx.type === 'INCOME' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                                            {parseFloat(tx.amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                        <td className={`px-6 py-4 font-medium ${tx.tipo === 'INCOME' ? 'text-emerald-600' : 'text-rose-600'}`}>{tx.tipo === 'ENTRADA' ? 'Entrada' : 'Saída'}</td>
+                                        <td className={`px-6 py-4 text-right font-bold ${tx.tipo === 'INCOME' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                            {tx.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                         </td>
                                     </tr>
                                 ))

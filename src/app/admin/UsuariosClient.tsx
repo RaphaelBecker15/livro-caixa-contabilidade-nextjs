@@ -5,7 +5,15 @@ import { UserRound } from "lucide-react";
 import { EditUserModal } from "@/components/admin/usuarios/EditUserModal";
 import { ExcluirUserModal } from "@/components/admin/usuarios/ExcluirUserModal";
 
+interface UsuariosProps {
+    id: string
+    nome: string
+    email: string
+    cargo: string
+}
+
 export function UsuariosClient() {
+    
     const { usuarios, usuarioEmEdicao } = useUsuarios()
 
     return (
@@ -21,7 +29,7 @@ export function UsuariosClient() {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                     {usuarios.length > 0 ? (
-                        usuarios.map((user: any) => (
+                        usuarios.map((user: UsuariosProps) => (
                             <tr key={user.id} className="hover:bg-slate-50/50 transition-colors">
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-3">

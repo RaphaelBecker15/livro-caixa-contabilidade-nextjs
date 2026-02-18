@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Plus, Save, UploadCloud } from "lucide-react";
 import ModalTransaction from "@/components/ModalTransaction";
 
-export function AddTransactionButton() {
+export function AddTransactionButton({ EmpresaLogada }: { EmpresaLogada: string }) {
     const [openModal, setOpenModal] = useState(false);
     const data = new Date().toISOString().split('T')[0];
 

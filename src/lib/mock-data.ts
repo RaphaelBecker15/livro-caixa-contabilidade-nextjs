@@ -3,6 +3,7 @@ export type Usuario = {
     nome: string
     email: string
     cargo: string
+    workspaceId: string
 }
 
 export type Transacao = {
@@ -20,6 +21,7 @@ export type Empresa = {
     id: string
     nome: string
     cnpj: string
+    workspaceId: string
 }
 
 export const transacoes = [
@@ -31,17 +33,17 @@ export const transacoes = [
         data: '2024-02-01',
         categoria: 'Salário',
         anexo: 'link do anexo',
-        empresaId: 'company-1'
+        empresaId: '1'
     },
     {
         id: '2',
-        valor: 350.00,
+        valor: 400.00,
         tipo: 'saida',
-        descricao: 'Aluguel de 350 reais',
+        descricao: 'Aluguel de 400 reais',
         data: '2024-02-05',
         categoria: 'Aluguel',
         anexo: 'link do anexo',
-        empresaId: 'company-1'
+        empresaId: '1'
     },
     {
         id: '3',
@@ -51,7 +53,7 @@ export const transacoes = [
         data: '2024-02-05',
         categoria: 'Aluguel',
         anexo: 'link do anexo',
-        empresaId: 'company-3'
+        empresaId: '3'
     },
     {
         id: '4',
@@ -61,7 +63,7 @@ export const transacoes = [
         data: '2024-02-10',
         categoria: 'Supermercado',
         anexo: 'link do anexo',
-        empresaId: 'company-1'
+        empresaId: '1'
     },
     {
         id: '5',
@@ -71,46 +73,52 @@ export const transacoes = [
         data: '2024-02-10',
         categoria: 'Supermercado',
         anexo: 'link do anexo',
-        empresaId: 'company-2'
+        empresaId: '2'
     }
 ]
 
 export const empresas: Empresa[] = [
     {
-        id: 'company-1',
+        id: '1',
         nome: 'Rezende Transportes',
         cnpj: '12993070000177',
+        workspaceId: '1'
     },
     {
-        id: 'company-2',
+        id: '2',
         nome: 'Rezende Contabilidade',
         cnpj: '16756070000199',
+        workspaceId: '1'
     },
     {
-        id: 'company-3',
+        id: '3',
         nome: 'Rezende Mecânica',
         cnpj: '14854070000166',
+        workspaceId: '1'
     },
 ]
 
 export const users: Usuario[] = [
     {
-        id: 'user-1',
+        id: '1',
         nome: 'Raphael',
         email: 'fiscal3@rezendetransportes.com.br',
         cargo: 'Fiscal',
+        workspaceId: '1'
     },
     {
-        id: 'user-2',
+        id: '2',
         nome: 'Rodrigo',
         email: 'fiscal2@rezendetransportes.com.br',
         cargo: 'Fiscal',
+        workspaceId: '1'
     },
     {
-        id: 'user-3',
+        id: '3',
         nome: 'Elio',
         email: 'fiscal@rezendetransportes.com.br',
         cargo: 'Diretor Fiscal',
+        workspaceId: '1'
     },
 ]
 

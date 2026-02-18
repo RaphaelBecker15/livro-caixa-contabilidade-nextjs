@@ -11,7 +11,7 @@ export function EditTransacaoModal() {
     const [form, setForm] = useState({
         data: transacaoEmEdicao?.data ?? "",
         descricao: transacaoEmEdicao?.descricao ?? "",
-        valor: transacaoEmEdicao?.valor ?? "",
+        valor: transacaoEmEdicao?.valor ?? 0,
         tipo: transacaoEmEdicao?.tipo ?? "",
         categoria: transacaoEmEdicao?.categoria ?? "",
         anexo: transacaoEmEdicao?.anexo ?? ""
@@ -43,7 +43,7 @@ export function EditTransacaoModal() {
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Valor (R$)</label>
-                    <input required type="number" value={form.valor} onChange={e => setForm(prev => ({ ...prev, valor: e.target.value }))} step="0.01" className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-black-500 outline-none"/>
+                    <input required type="number" value={form.valor} onChange={e => setForm(prev => ({ ...prev, valor: parseFloat(e.target.value) }))} step="0.01" className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-black-500 outline-none"/>
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Tipo</label>

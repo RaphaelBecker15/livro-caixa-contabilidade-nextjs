@@ -5,7 +5,15 @@ import { Building2 } from "lucide-react";
 import { EditEmpresaModal } from "@/components/admin/empresas/EditEmpresaModal";
 import { ExcluirEmpresaModal } from "@/components/admin/empresas/ExcluirEmpresaModal";
 
+interface EmpresasProps {
+    id: string
+    nome: string
+    cnpj: string
+    workspaceId: string
+}
+
 export function EmpresasClient() {
+    
     const { empresas, empresaEmEdicao } = useEmpresas()
 
     return (
@@ -20,7 +28,7 @@ export function EmpresasClient() {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                     {empresas.length > 0 ? (
-                        empresas.map((empresa: any) => (
+                        empresas.map((empresa: EmpresasProps) => (
                             <tr key={empresa.id} className="hover:bg-slate-50/50 transition-colors">
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-3">
@@ -30,7 +38,7 @@ export function EmpresasClient() {
                                         <span className="font-medium text-sm">{empresa.nome}</span>
                                     </div>
                                 </td>
-                                <td className="px-6 py-4 text-slate-600 font-medium text-sm">{empresa.cnpj}</td>
+                                <td className="px-6 py-4 text-slate-600 font-medium text-sm">{empresa.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5")}</td>
                                 <td className="px-6 py-4 text-right">
                                     <CompanyActionButtons id={empresa.id}/>
                                 </td>
