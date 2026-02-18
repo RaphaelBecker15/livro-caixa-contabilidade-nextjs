@@ -34,8 +34,8 @@ export function TransacoesClient() {
                                     <td className="px-6 py-4">
                                         <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">{tx.category?.name || 'Sem categoria'}</span>
                                     </td>
-                                    <td className={`px-6 py-4 font-medium ${tx.type === 'INCOME' ? 'text-emerald-600' : 'text-rose-600'}`}>{tx.type === 'ENTRADA' ? 'Entrada' : 'Saída'}</td>
-                                    <td className={`px-6 py-4 text-right font-bold ${tx.type === 'INCOME' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                    <td className={`px-6 py-4 font-medium ${tx.type === 'entrada' ? 'text-emerald-600' : 'text-rose-600'}`}>{tx.type}</td>
+                                    <td className={`px-6 py-4 text-right font-bold ${tx.type === 'entrada' ? 'text-emerald-600' : 'text-rose-600'}`}>
                                         {parseFloat(tx.amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                     </td>
                                     <td className="px-6 py-4 text-right">
