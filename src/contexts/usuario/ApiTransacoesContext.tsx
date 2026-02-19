@@ -10,6 +10,9 @@ type TransacoesContextType = {
     modalEditarAberto: boolean
     modalExcluirAberto: boolean
 
+    mesSelecionado: string
+    setMesSelecionado: (mes: string) => void
+
     abrirModalEditar: (transacao: Transacao) => void
     abrirModalExcluir: (transacao: Transacao) => void
     fecharModais: () => void
@@ -24,11 +27,15 @@ const messages = {
     erro: "Ocorreu um erro na operação. Tente novamente mais tarde!"
 }
 
+const hoje = new Date()
+const mesAtual = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`
+
 export function TransacoesProvider({children}: {children: ReactNode}) {
     const [transacoes, setTransacoes] = useState<Transacao[]>(mockData)
     const [transacaoEmEdicao, setTransacaoEmEdicao] = useState<Transacao | null>(null)
     const [modalEditarAberto, setModalEditarAberto] = useState(false)
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false)
+    const [mesSelecionado, setMesSelecionado] = useState(mesAtual)
 
     const abrirModalEditar = (transacao: Transacao) => {
         setTransacaoEmEdicao(transacao)
@@ -70,6 +77,8 @@ export function TransacoesProvider({children}: {children: ReactNode}) {
             transacaoEmEdicao,
             modalEditarAberto,
             modalExcluirAberto,
+            mesSelecionado,
+            setMesSelecionado,
             abrirModalEditar,
             abrirModalExcluir,
             fecharModais,

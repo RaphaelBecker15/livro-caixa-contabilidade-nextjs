@@ -17,17 +17,19 @@ interface TransacoesProps {
 
 export function TransacoesClient({ EmpresaLogada }: { EmpresaLogada: string }) {
 
-    const { transacoes, transacaoEmEdicao } = useTransacoes()
+    const { transacoes, transacaoEmEdicao, mesSelecionado, setMesSelecionado } = useTransacoes()
 
     const transacoesFiltradas = transacoes.filter((e) => {
-        return e.empresaId == EmpresaLogada;
+        const pertenceEmpresa =  e.empresaId == EmpresaLogada
+        const pertenceMes = e.data.startsWith(mesSelecionado)
+        return pertenceEmpresa && pertenceMes
     })
 
     return (
         <>
             <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/50 flex justify-between items-center">
                 <h3 className="font-semibold text-slate-800">Lançamentos</h3>
-                <input className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all" type="month" value="2026-02"></input>
+                <input type="month" value={mesSelecionado} onChange={e => setMesSelecionado(e.target.value)} className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"></input>
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
@@ -50,7 +52,7 @@ export function TransacoesClient({ EmpresaLogada }: { EmpresaLogada: string }) {
                                     <td className="px-6 py-4">
                                         <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">{tx.categoria || 'Sem categoria'}</span>
                                     </td>
-                                    <td className={`px-6 py-4 font-medium ${tx.tipo === 'entrada' ? 'text-emerald-600' : 'text-rose-600'}`}>{tx.tipo}</td>
+                                    <td className={`px-6 py-4 font-medium ${tx.tipo === 'entrada' ? 'text-emerald-600' : 'text-rose-600'}`}>{tx.tipo === 'entrada' ? 'Entrada' : 'Saída'}</td>
                                     <td className={`px-6 py-4 text-right font-bold ${tx.tipo === 'entrada' ? 'text-emerald-600' : 'text-rose-600'}`}>
                                         {tx.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                     </td>

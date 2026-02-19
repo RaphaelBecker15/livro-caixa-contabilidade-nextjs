@@ -30,7 +30,7 @@ export const transacoes = [
         valor: 1500.00,
         tipo: 'entrada',
         descricao: 'Salário de 1500 reais',
-        data: '2024-02-01',
+        data: '2026-02-01',
         categoria: 'Salário',
         anexo: 'link do anexo',
         empresaId: '1'
@@ -40,7 +40,7 @@ export const transacoes = [
         valor: 400.00,
         tipo: 'saida',
         descricao: 'Aluguel de 400 reais',
-        data: '2024-02-05',
+        data: '2026-02-05',
         categoria: 'Aluguel',
         anexo: 'link do anexo',
         empresaId: '1'
@@ -50,7 +50,7 @@ export const transacoes = [
         valor: 357.00,
         tipo: 'saida',
         descricao: 'Aluguel de 350 reais',
-        data: '2024-02-05',
+        data: '2026-02-05',
         categoria: 'Aluguel',
         anexo: 'link do anexo',
         empresaId: '3'
@@ -60,7 +60,7 @@ export const transacoes = [
         valor: 120.50,
         tipo: 'saida',
         descricao: 'Compra de 120,50',
-        data: '2024-02-10',
+        data: '2026-02-10',
         categoria: 'Supermercado',
         anexo: 'link do anexo',
         empresaId: '1'
@@ -70,10 +70,20 @@ export const transacoes = [
         valor: 122.50,
         tipo: 'saida',
         descricao: 'Compra de 120,50',
-        data: '2024-02-10',
+        data: '2026-02-10',
         categoria: 'Supermercado',
         anexo: 'link do anexo',
         empresaId: '2'
+    },
+    {
+        id: '6',
+        valor: 500.00,
+        tipo: 'entrada',
+        descricao: 'Compra de 120,50',
+        data: '2026-01-10',
+        categoria: 'Supermercado',
+        anexo: 'link do anexo',
+        empresaId: '1'
     }
 ]
 
