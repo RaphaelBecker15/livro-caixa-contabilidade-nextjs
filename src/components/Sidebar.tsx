@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLogout } from "@/contexts/LogoutContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const isActive = (path: string, location: string) => {
     return location === path ? "bg-slate-800 text-white" : "text-slate-400 hover:bg-slate-800 hover:text-white";
@@ -17,6 +18,8 @@ const NavItem = ({ to, icon: Icon, label, currentPath }: { to: string; icon: Luc
 );
 
 export function Sidebar() {
+
+    const { role } = useAuth();
 
     const pathname = usePathname();
     const { setOpenModal } = useLogout();
@@ -32,9 +35,9 @@ export function Sidebar() {
             </div>
 
             <nav className='flex-1 p-4 space-y-2'>
-                <NavItem to="/usuario/dashboard" icon={LayoutDashboard} label="Dashboard" currentPath={pathname}></NavItem>
-                <NavItem to="/admin/empresas" icon={Building2} label="Empresas" currentPath={pathname}></NavItem>
-                <NavItem to="/admin/usuarios" icon={UsersRound} label="Usuários" currentPath={pathname}></NavItem>
+                {role === 'empresa' && <NavItem to="/empresa/dashboard" icon={LayoutDashboard} label="Dashboard" currentPath={pathname}></NavItem>}
+                {(role === 'super_admin' || role === 'admin') && <NavItem to="/admin/empresas" icon={Building2} label="Empresas" currentPath={pathname}></NavItem>}
+                {role === 'super_admin' && <NavItem to="/admin/usuarios" icon={UsersRound} label="Usuários" currentPath={pathname}></NavItem>}
             </nav>
 
             <div className="p-4 border-t border-slate-800">

@@ -1,6 +1,6 @@
 "use client";
 import { Pencil, Trash2 } from "lucide-react";
-import { useTransacoes } from "@/contexts/usuario/ApiTransacoesContext";
+import { useTransacoes } from "@/contexts/empresa/ApiTransacoesContext";
 
 interface TransactionActionButtonsProps {
     id: string;

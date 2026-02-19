@@ -1,8 +1,8 @@
 "use client";
-import { useTransacoes } from "@/contexts/usuario/ApiTransacoesContext";
-import { TransactionActionButtons } from "@/components/usuario/TransactionActionButtons";
-import { EditTransacaoModal } from "@/components/usuario/EditTransacaoModal";
-import { ExcluirTransacaoModal } from "@/components/usuario/ExcluirTransacaoModal";
+import { useTransacoes } from "@/contexts/empresa/ApiTransacoesContext";
+import { TransactionActionButtons } from "@/components/empresa/TransactionActionButtons";
+import { EditTransacaoModal } from "@/components/empresa/EditTransacaoModal";
+import { ExcluirTransacaoModal } from "@/components/empresa/ExcluirTransacaoModal";
 
 interface TransacoesProps {
     id: string

@@ -1,6 +1,6 @@
-import { AddTransactionButton } from "@/components/usuario/AddTransactionButton";
-import { TransacoesClient } from "@/app/usuario/TransacoesClient";
-import { StatsCards } from "@/components/usuario/StatsCards";
+import { AddTransactionButton } from "@/components/empresa/AddTransactionButton";
+import { TransacoesClient } from "@/app/empresa/TransacoesClient";
+import { StatsCards } from "@/components/empresa/StatsCards";
 
 const empresaLogada = '1'
 

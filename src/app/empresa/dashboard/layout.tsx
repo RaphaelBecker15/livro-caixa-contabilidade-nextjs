@@ -1,4 +1,4 @@
-import { TransacoesProvider } from "@/contexts/usuario/ApiTransacoesContext";
+import { TransacoesProvider } from "@/contexts/empresa/ApiTransacoesContext";
 import { ReactNode } from "react";
 
 export default function TransacoesLayout({ children }: { children: ReactNode }) {

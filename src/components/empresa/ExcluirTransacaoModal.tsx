@@ -1,6 +1,6 @@
 "use client";
 import Modal from "@/components/Modal";
-import { useTransacoes } from "@/contexts/usuario/ApiTransacoesContext";
+import { useTransacoes } from "@/contexts/empresa/ApiTransacoesContext";
 
 export function ExcluirTransacaoModal() {
 

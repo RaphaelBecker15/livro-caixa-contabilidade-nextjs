@@ -1,7 +1,7 @@
 "use client";
 import { Save, UploadCloud } from "lucide-react";
 import ModalTransaction from "@/components/ModalTransaction";
-import { useTransacoes } from "@/contexts/usuario/ApiTransacoesContext";
+import { useTransacoes } from "@/contexts/empresa/ApiTransacoesContext";
 import { useState } from "react";
 
 export function EditTransacaoModal() {
