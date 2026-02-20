@@ -6,6 +6,10 @@ export async function POST(request: NextRequest) {
         const body = await request.json()
         const { name, user_name, email, password, role, workspaceId } = body
 
+        if (role === 'super_admin') {
+            return NextResponse.json({ error: 'Não é permitido criar super_admin.' }, { status: 403 })
+        }
+
         const supabaseAdmin = createClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
             process.env.SUPABASE_SERVICE_ROLE_KEY!

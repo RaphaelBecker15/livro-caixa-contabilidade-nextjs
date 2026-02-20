@@ -6,15 +6,17 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import type { ReactNode } from "react";
 import { ToastContainer, Bounce } from "react-toastify";
 import { NavigationLoader } from "@/components/NavigationLoader";
+import { AuthUser } from "@/lib/types";
 
 interface LayoutClientWrapperProps {
     children: ReactNode
     role: string
+    user: AuthUser | null
 }
 
-export function LayoutClientWrapper({ children, role }: LayoutClientWrapperProps) {
+export function LayoutClientWrapper({ children, role, user }: LayoutClientWrapperProps) {
     return (
-        <AuthProvider role={role}>
+        <AuthProvider role={role} user={user}>
             <LogoutProvider>
                 <NavigationLoader />
                 <div className="flex">

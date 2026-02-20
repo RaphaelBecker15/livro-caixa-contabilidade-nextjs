@@ -47,7 +47,7 @@ export function AddUserButton() {
 
             toast.success('Usuário criado com sucesso!')
             setOpenModal(false)
-            setForm({ name: '', user_name: '', email: '', role: 'ADMIN', password: '' })
+            setForm({ name: '', user_name: '', email: '', role: 'admin', password: '' })
             router.refresh()
         } catch {
             toast.error('Erro ao criar usuário. Tente novamente.')
@@ -84,7 +84,6 @@ export function AddUserButton() {
                         <label className="block text-sm font-semibold text-slate-700 mb-1">Função</label>
                         <select required value={form.role} onChange={e => setForm(prev => ({ ...prev, role: e.target.value }))} className="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none">
                             <option value="admin">Admin</option>
-                            <option value="super_admin">Super Admin</option>
                         </select>
                     </div>
 

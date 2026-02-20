@@ -19,7 +19,7 @@ const NavItem = ({ to, icon: Icon, label, currentPath }: { to: string; icon: Luc
 
 export function Sidebar() {
 
-    const { role } = useAuth();
+    const { role, user } = useAuth();
 
     const pathname = usePathname();
     const { setOpenModal } = useLogout();
@@ -46,8 +46,8 @@ export function Sidebar() {
                         <CircleUserRound size={250}/>
                     </div>
                     <div className="overflow-hidden">
-                        <p className="text-sm font-medium text-white truncate">Raphael</p>
-                        <p className="text-xs text-slate-500 truncate">rraffaelbeckerr@gmail.com</p>
+                        <p className="text-sm font-medium text-white truncate">{user?.name ?? 'Usuário'}</p>
+                        <p className="text-xs text-slate-500 truncate">{user?.email ?? ''}</p>
                     </div>
                 </div>
                 <button onClick={() => setOpenModal(true)} className="cursor-pointer w-full flex items-center gap-3 px-4 py-2 text-rose-400 hover:bg-rose-950/30 rounded-lg transition-colors text-sm">

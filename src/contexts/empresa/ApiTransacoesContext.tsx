@@ -1,7 +1,9 @@
 "use client";
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Transacao, transacoes as mockData } from "@/lib/types";
+import { createClient } from "@/lib/supabase/client";
+import { Transacao } from "@/lib/types";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type TransacoesContextType = {
     transacoes: Transacao[]
@@ -16,8 +18,9 @@ type TransacoesContextType = {
     abrirModalEditar: (transacao: Transacao) => void
     abrirModalExcluir: (transacao: Transacao) => void
     fecharModais: () => void
-    salvarEdicao: (dadosAtualizados: Transacao) => void
-    excluirTransacao: (id: string) => void
+    adicionarTransacao: (transacao: Transacao) => void
+    salvarEdicao: (dadosAtualizados: Transacao) => Promise<void>
+    excluirTransacao: (id: string) => Promise<void>
 }
 
 const ApiTransacoesContext = createContext<TransacoesContextType | undefined>(undefined)
@@ -30,8 +33,12 @@ const messages = {
 const hoje = new Date()
 const mesAtual = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`
 
-export function TransacoesProvider({children}: {children: ReactNode}) {
-    const [transacoes, setTransacoes] = useState<Transacao[]>(mockData)
+export function TransacoesProvider({ children, initialData  }: { children: ReactNode, initialData: Transacao[] }) {
+
+    const supabase = createClient()
+    const router = useRouter()
+
+    const [transacoes, setTransacoes] = useState<Transacao[]>(initialData)
     const [transacaoEmEdicao, setTransacaoEmEdicao] = useState<Transacao | null>(null)
     const [modalEditarAberto, setModalEditarAberto] = useState(false)
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false)
@@ -53,22 +60,52 @@ export function TransacoesProvider({children}: {children: ReactNode}) {
         setTransacaoEmEdicao(null)
     }
 
-    const salvarEdicao = (dadosAtualizados: Transacao) => {
-        setTransacoes(prev =>
-            prev.map(u =>
-                u.id === dadosAtualizados.id
-                    ? dadosAtualizados
-                    : u
-            )
-        )
-        toast.success(messages.sucesso)
-        fecharModais()
+    const adicionarTransacao = (transacao: Transacao) => {
+        setTransacoes(prev => [transacao, ...prev])
     }
 
-    const excluirTransacao = (id: string) => {
-        setTransacoes(prev => prev.filter(u => u.id !== id))
-        toast.success(messages.sucesso)
-        fecharModais()
+    const salvarEdicao = async (dadosAtualizados: Transacao) => {
+        try {
+            const { error } = await supabase
+                .from('Transaction')
+                .update({
+                    date: dadosAtualizados.date,
+                    description: dadosAtualizados.description,
+                    amount: dadosAtualizados.amount,
+                    type: dadosAtualizados.type,
+                    categoryId: dadosAtualizados.categoryId,
+                })
+                .eq('id', dadosAtualizados.id)
+
+            if (error) throw error
+
+            setTransacoes(prev =>
+                prev.map(t => t.id === dadosAtualizados.id ? dadosAtualizados : t)
+            )
+            toast.success(messages.sucesso)
+            fecharModais()
+            router.refresh()
+        } catch {
+            toast.error(messages.erro)
+        }
+    }
+
+    const excluirTransacao = async (id: string) => {
+        try {
+            const { error } = await supabase
+                .from('Transaction')
+                .update({ deletedAt: new Date().toISOString() })
+                .eq('id', id)
+
+            if (error) throw error
+
+            setTransacoes(prev => prev.filter(t => t.id !== id))
+            toast.success(messages.sucesso)
+            fecharModais()
+            router.refresh()
+        } catch {
+            toast.error(messages.erro)
+        }
     }
 
     return (
@@ -83,7 +120,8 @@ export function TransacoesProvider({children}: {children: ReactNode}) {
             abrirModalExcluir,
             fecharModais,
             salvarEdicao,
-            excluirTransacao
+            excluirTransacao,
+            adicionarTransacao
         }}>
             {children}
         </ApiTransacoesContext.Provider>

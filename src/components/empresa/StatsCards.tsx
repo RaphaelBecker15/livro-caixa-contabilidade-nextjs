@@ -21,25 +21,21 @@ const StatCard = ({ label, value, icon: Icon, colorClass }: StatCardProps) => (
     </div>
 );
 
-export function StatsCards({ EmpresaLogada }: { EmpresaLogada: string }) {
+export function StatsCards() {
 
     const { transacoes, mesSelecionado } = useTransacoes()
 
-    const filtro = transacoes.filter((e) => {
-        const pertenceEmpresa = e.empresaId == EmpresaLogada
-        const pertenceMes = e.data.startsWith(mesSelecionado)
-        return pertenceEmpresa && pertenceMes
-    })
+    const filtro = transacoes.filter(tx => tx.date.startsWith(mesSelecionado))
 
     const totalEntradas = filtro
-        .filter(tx => tx.tipo === 'entrada')
-        .reduce((acumulador, tx) => acumulador + tx.valor, 0)
+        .filter(tx => tx.type === 'income')
+        .reduce((acc, tx) => acc + Number(tx.amount), 0)
 
     const totalSaidas = filtro
-        .filter(tx => tx.tipo === 'saida')
-        .reduce((acumulador, tx) => acumulador + tx.valor, 0)
+        .filter(tx => tx.type === 'expense')
+        .reduce((acc, tx) => acc + Number(tx.amount), 0)
 
-    const balance = (totalEntradas - totalSaidas)
+    const balance = totalEntradas - totalSaidas
 
     return (
         <>

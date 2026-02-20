@@ -71,6 +71,17 @@ export function EmpresasProvider({ children, initialData }: {children: ReactNode
 
             if (error) throw error
 
+            const { error: userError } = await supabase
+                .from('User')
+                .update({
+                    name: dadosAtualizados.name,
+                    user_name: dadosAtualizados.user_name,
+                    email: dadosAtualizados.email,
+                })
+                .eq('companyId', dadosAtualizados.id)
+
+            if (userError) throw userError
+
             setEmpresas(prev =>
                 prev.map(e => e.id === dadosAtualizados.id ? dadosAtualizados : e)
             )
@@ -84,12 +95,14 @@ export function EmpresasProvider({ children, initialData }: {children: ReactNode
 
     const excluirEmpresa = async (id: string) => {
         try {
-            const { error } = await supabase
-                .from('Company')
-                .update({ deletedAt: new Date().toISOString() })
-                .eq('id', id)
+            const response = await fetch('/api/excluir-empresa', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            })
 
-            if (error) throw error
+            const data = await response.json()
+            if (!response.ok) throw new Error(data.error)
 
             setEmpresas(prev => prev.filter(e => e.id !== id))
             toast.success(messages.sucesso)

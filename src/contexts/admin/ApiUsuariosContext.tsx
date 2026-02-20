@@ -80,18 +80,14 @@ export function UsuariosProvider({children, initialData}: {children: ReactNode, 
 
     const excluirUsuario = async (id: string) => {
         try {
-            const { data: { user } } = await supabase.auth.getUser()
-            console.log('user_metadata:', user?.user_metadata)
-            console.log('user_metadata completo:', JSON.stringify(user?.user_metadata))
+            const response = await fetch('/api/excluir-usuario', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            })
 
-            const { error } = await supabase
-                .from('User')
-                .update({ deletedAt: new Date().toISOString() })
-                .eq('id', id)
-                
-            console.log('erro:', error)
-
-            if (error) throw error
+            const data = await response.json()
+            if (!response.ok) throw new Error(data.error)
 
             setUsuarios(prev => prev.filter(u => u.id !== id))
             toast.success(messages.sucesso)
