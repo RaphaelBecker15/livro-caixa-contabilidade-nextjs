@@ -1,10 +1,11 @@
 import { ReactNode } from "react";
 import { LayoutClientWrapper } from "@/components/LayoutClientWrapper";
-import { cookies } from "next/headers";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function LayoutUser({ children }: { children: ReactNode }) {
-  const cookieStore = await cookies()
-  const role = cookieStore.get('mock_role')?.value ?? 'empresa'
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+const role = user?.user_metadata?.role ?? 'empresa'
   
   return <LayoutClientWrapper role={role}>{children}</LayoutClientWrapper>;
 }

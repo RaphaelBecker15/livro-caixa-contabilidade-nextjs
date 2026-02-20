@@ -1,6 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { transacoes, empresas } from "@/lib/mock-data";
+import { transacoes, empresas } from "@/lib/types";
 import { LivroCaixaClient } from "@/app/admin/LivroCaixaClient";
 
 interface PageProps {

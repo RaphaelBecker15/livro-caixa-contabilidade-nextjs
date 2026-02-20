@@ -1,9 +1,12 @@
 export type Usuario = {
     id: string
-    nome: string
+    name: string
+    user_name: string
     email: string
-    cargo: string
+    role: 'super_admin' | 'admin' | 'empresa'
+    active: boolean
     workspaceId: string
+    companyId: string | null
 }
 
 export type Transacao = {
@@ -19,8 +22,11 @@ export type Transacao = {
 
 export type Empresa = {
     id: string
-    nome: string
+    name: string
+    user_name: string
+    email: string
     cnpj: string
+    active: boolean
     workspaceId: string
 }
 
@@ -85,55 +91,4 @@ export const transacoes = [
         anexo: 'link do anexo',
         empresaId: '1'
     }
-]
-
-export const empresas: Empresa[] = [
-    {
-        id: '1',
-        nome: 'Rezende Transportes',
-        cnpj: '12993070000177',
-        workspaceId: '1'
-    },
-    {
-        id: '2',
-        nome: 'Rezende Contabilidade',
-        cnpj: '16756070000199',
-        workspaceId: '1'
-    },
-    {
-        id: '3',
-        nome: 'Rezende Mecânica',
-        cnpj: '14854070000166',
-        workspaceId: '1'
-    },
-]
-
-export const users: Usuario[] = [
-    {
-        id: '1',
-        nome: 'Raphael',
-        email: 'fiscal3@rezendetransportes.com.br',
-        cargo: 'Fiscal',
-        workspaceId: '1'
-    },
-    {
-        id: '2',
-        nome: 'Rodrigo',
-        email: 'fiscal2@rezendetransportes.com.br',
-        cargo: 'Fiscal',
-        workspaceId: '1'
-    },
-    {
-        id: '3',
-        nome: 'Elio',
-        email: 'fiscal@rezendetransportes.com.br',
-        cargo: 'Diretor Fiscal',
-        workspaceId: '1'
-    },
-]
-
-export const category = [
-  { id: 'cat-1', nome: 'Salário', cor: '#10b981', tipo: 'entrada' },
-  { id: 'cat-2', nome: 'Moradia', cor: '#ef4444', tipo: 'saida' },
-  { id: 'cat-3', nome: 'Alimentação', cor: '#f59e0b', tipo: 'saida' },
 ]

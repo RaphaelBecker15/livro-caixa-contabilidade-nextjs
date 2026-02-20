@@ -5,6 +5,7 @@ import { LogoutModal } from "@/components/LogoutModal";
 import { AuthProvider } from "@/contexts/AuthContext";
 import type { ReactNode } from "react";
 import { ToastContainer, Bounce } from "react-toastify";
+import { NavigationLoader } from "@/components/NavigationLoader";
 
 interface LayoutClientWrapperProps {
     children: ReactNode
@@ -15,6 +16,7 @@ export function LayoutClientWrapper({ children, role }: LayoutClientWrapperProps
     return (
         <AuthProvider role={role}>
             <LogoutProvider>
+                <NavigationLoader />
                 <div className="flex">
                     <Sidebar />
                     <main style={{ marginLeft: '256px', width: '100%', padding: '20px' }}>

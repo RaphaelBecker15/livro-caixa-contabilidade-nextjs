@@ -1,7 +1,9 @@
 "use client";
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Empresa, empresas as mockData } from "@/lib/mock-data";
+import { createClient } from "@/lib/supabase/client";
+import { Empresa } from "@/lib/types";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type EmpresasContextType = {
     empresas: Empresa[]
@@ -10,11 +12,12 @@ type EmpresasContextType = {
     modalEditarAberto: boolean
     modalExcluirAberto: boolean
 
-    abrirModalEditar: (usuario: Empresa) => void
-    abrirModalExcluir: (usuario: Empresa) => void
+    abrirModalEditar: (empresa: Empresa) => void
+    abrirModalExcluir: (empresa: Empresa) => void
     fecharModais: () => void
-    salvarEdicao: (dadosAtualizados: Empresa) => void
-    excluirEmpresa: (id: string) => void
+    adicionarEmpresa: (empresa: Empresa) => void
+    salvarEdicao: (dadosAtualizados: Empresa) => Promise<void>
+    excluirEmpresa: (id: string) => Promise<void>
 }
 
 const ApiEmpresasContext = createContext<EmpresasContextType | undefined>(undefined)
@@ -24,11 +27,19 @@ const messages = {
     erro: "Ocorreu um erro na operação. Tente novamente mais tarde!"
 }
 
-export function EmpresasProvider({children}: {children: ReactNode}) {
-    const [empresas, setEmpresas] = useState<Empresa[]>(mockData)
+export function EmpresasProvider({ children, initialData }: {children: ReactNode, initialData: Empresa[]}) {
+
+    const supabase = createClient()
+    const router = useRouter()
+
+    const [empresas, setEmpresas] = useState<Empresa[]>(initialData)
     const [empresaEmEdicao, setEmpresaEmEdicao] = useState<Empresa | null>(null)
     const [modalEditarAberto, setModalEditarAberto] = useState(false)
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false)
+
+    const adicionarEmpresa = (empresa: Empresa) => {
+        setEmpresas(prev => [empresa, ...prev])
+    }
 
     const abrirModalEditar = (empresa: Empresa) => {
         setEmpresaEmEdicao(empresa)
@@ -46,22 +57,47 @@ export function EmpresasProvider({children}: {children: ReactNode}) {
         setEmpresaEmEdicao(null)
     }
 
-    const salvarEdicao = (dadosAtualizados: Empresa) => {
-        setEmpresas(prev =>
-            prev.map(u =>
-                u.id === dadosAtualizados.id
-                    ? dadosAtualizados
-                    : u
+    const salvarEdicao = async (dadosAtualizados: Empresa) => {
+        try {
+            const { error } = await supabase
+                .from('Company')
+                .update({
+                    name: dadosAtualizados.name,
+                    user_name: dadosAtualizados.user_name,
+                    email: dadosAtualizados.email,
+                    cnpj: dadosAtualizados.cnpj,
+                })
+                .eq('id', dadosAtualizados.id)
+
+            if (error) throw error
+
+            setEmpresas(prev =>
+                prev.map(e => e.id === dadosAtualizados.id ? dadosAtualizados : e)
             )
-        )
-        toast.success(messages.sucesso)
-        fecharModais()
+            toast.success(messages.sucesso)
+            fecharModais()
+            router.refresh()
+        } catch {
+            toast.error(messages.erro)
+        }
     }
 
-    const excluirEmpresa = (id: string) => {
-        setEmpresas(prev => prev.filter(u => u.id !== id))
-        toast.success(messages.sucesso)
-        fecharModais()
+    const excluirEmpresa = async (id: string) => {
+        try {
+            const { error } = await supabase
+                .from('Company')
+                .update({ deletedAt: new Date().toISOString() })
+                .eq('id', id)
+
+            if (error) throw error
+
+            setEmpresas(prev => prev.filter(e => e.id !== id))
+            toast.success(messages.sucesso)
+            fecharModais()
+            router.refresh()
+        } catch {
+            toast.error(messages.erro)
+        }
     }
 
     return (
@@ -70,6 +106,7 @@ export function EmpresasProvider({children}: {children: ReactNode}) {
             empresaEmEdicao,
             modalEditarAberto,
             modalExcluirAberto,
+            adicionarEmpresa,
             abrirModalEditar,
             abrirModalExcluir,
             fecharModais,

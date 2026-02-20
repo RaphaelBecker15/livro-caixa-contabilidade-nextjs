@@ -4,13 +4,7 @@ import { CompanyActionButtons } from "@/components/admin/empresas/CompanyActionB
 import { Building2 } from "lucide-react";
 import { EditEmpresaModal } from "@/components/admin/empresas/EditEmpresaModal";
 import { ExcluirEmpresaModal } from "@/components/admin/empresas/ExcluirEmpresaModal";
-
-interface EmpresasProps {
-    id: string
-    nome: string
-    cnpj: string
-    workspaceId: string
-}
+import { Empresa } from "@/lib/types";
 
 export function EmpresasClient() {
     
@@ -28,14 +22,14 @@ export function EmpresasClient() {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                     {empresas.length > 0 ? (
-                        empresas.map((empresa: EmpresasProps) => (
+                        empresas.map((empresa: Empresa) => (
                             <tr key={empresa.id} className="hover:bg-slate-50/50 transition-colors">
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-3">
                                         <div className="p-2 bg-slate-100 rounded-lg text-slate-500">
                                             <Building2 size={20} />
                                         </div>
-                                        <span className="font-medium text-sm">{empresa.nome}</span>
+                                        <span className="font-medium text-sm">{empresa.name}</span>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 text-slate-600 font-medium text-sm">{empresa.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5")}</td>

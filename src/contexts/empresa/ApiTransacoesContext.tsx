@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Transacao, transacoes as mockData } from "@/lib/mock-data";
+import { Transacao, transacoes as mockData } from "@/lib/types";
 import { toast } from "react-toastify";
 
 type TransacoesContextType = {

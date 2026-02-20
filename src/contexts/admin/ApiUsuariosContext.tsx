@@ -1,7 +1,9 @@
 "use client";
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Usuario, users as mockData } from "@/lib/mock-data";
+import { createClient } from "@/lib/supabase/client";
+import { Usuario } from "@/lib/types";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type UsuariosContextType = {
     usuarios: Usuario[]
@@ -13,8 +15,8 @@ type UsuariosContextType = {
     abrirModalEditar: (usuario: Usuario) => void
     abrirModalExcluir: (usuario: Usuario) => void
     fecharModais: () => void
-    salvarEdicao: (dadosAtualizados: Usuario) => void
-    excluirUsuario: (id: string) => void
+    salvarEdicao: (dadosAtualizados: Usuario) => Promise<void>
+    excluirUsuario: (id: string) => Promise<void>
 }
 
 
@@ -25,8 +27,13 @@ const messages = {
     erro: "Ocorreu um erro na operação. Tente novamente mais tarde!"
 }
 
-export function UsuariosProvider({children}: {children: ReactNode}) {
-    const [usuarios, setUsuarios] = useState<Usuario[]>(mockData)
+export function UsuariosProvider({children, initialData}: {children: ReactNode, initialData: Usuario[]}) {
+
+    const supabase = createClient()
+
+    const router = useRouter()
+
+    const [usuarios, setUsuarios] = useState<Usuario[]>(initialData)
     const [usuarioEmEdicao, setUsuarioEmEdicao] = useState<Usuario | null>(null)
     const [modalEditarAberto, setModalEditarAberto] = useState(false)
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false)
@@ -47,22 +54,52 @@ export function UsuariosProvider({children}: {children: ReactNode}) {
         setUsuarioEmEdicao(null)
     }
 
-    const salvarEdicao = (dadosAtualizados: Usuario) => {
-        setUsuarios(prev =>
-            prev.map(u =>
-                u.id === dadosAtualizados.id
-                    ? dadosAtualizados
-                    : u
+    const salvarEdicao = async (dadosAtualizados: Usuario) => {
+        try {
+            const { error } = await supabase
+                .from('User')
+                .update({
+                    name: dadosAtualizados.name,
+                    user_name: dadosAtualizados.user_name,
+                    email: dadosAtualizados.email
+                })
+                .eq('id', dadosAtualizados.id)
+
+            if (error) throw error
+
+            setUsuarios(prev =>
+                prev.map(u => u.id === dadosAtualizados.id ? dadosAtualizados : u)
             )
-        )
-        toast.success(messages.sucesso)
-        fecharModais()
+            toast.success(messages.sucesso)
+            fecharModais()
+            router.refresh()
+        } catch {
+            toast.error(messages.erro)
+        }
     }
 
-    const excluirUsuario = (id: string) => {
-        setUsuarios(prev => prev.filter(u => u.id !== id))
-        toast.success(messages.sucesso)
-        fecharModais()
+    const excluirUsuario = async (id: string) => {
+        try {
+            const { data: { user } } = await supabase.auth.getUser()
+            console.log('user_metadata:', user?.user_metadata)
+            console.log('user_metadata completo:', JSON.stringify(user?.user_metadata))
+
+            const { error } = await supabase
+                .from('User')
+                .update({ deletedAt: new Date().toISOString() })
+                .eq('id', id)
+                
+            console.log('erro:', error)
+
+            if (error) throw error
+
+            setUsuarios(prev => prev.filter(u => u.id !== id))
+            toast.success(messages.sucesso)
+            fecharModais()
+            router.refresh()
+        } catch {
+            toast.error(messages.erro)
+        }
     }
 
     return (
