@@ -4,6 +4,7 @@ import { Plus, Save } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useUsuarios } from "@/contexts/admin/ApiUsuariosContext";
 import Modal from "@/components/Modal";
 
 export function AddUserButton() {
@@ -20,6 +21,8 @@ export function AddUserButton() {
         role: 'admin',
         password: ''
     })
+
+    const { adicionarUsuario } = useUsuarios()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -45,6 +48,7 @@ export function AddUserButton() {
             const data = await response.json()
             if (!response.ok) throw new Error(data.error)
 
+            adicionarUsuario(data.usuario)
             toast.success('Usuário criado com sucesso!')
             setOpenModal(false)
             setForm({ name: '', user_name: '', email: '', role: 'admin', password: '' })

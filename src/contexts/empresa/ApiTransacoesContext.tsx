@@ -20,7 +20,7 @@ type TransacoesContextType = {
     fecharModais: () => void
     adicionarTransacao: (transacao: Transacao) => void
     salvarEdicao: (dadosAtualizados: Transacao) => Promise<void>
-    excluirTransacao: (id: string) => Promise<void>
+    excluirTransacao: (id: string, onSuccess?: () => void) => Promise<void>
 }
 
 const ApiTransacoesContext = createContext<TransacoesContextType | undefined>(undefined)
@@ -90,7 +90,7 @@ export function TransacoesProvider({ children, initialData  }: { children: React
         }
     }
 
-    const excluirTransacao = async (id: string) => {
+    const excluirTransacao = async (id: string, onSuccess?: () => void) => {
         try {
             const { error } = await supabase
                 .from('Transaction')
@@ -102,6 +102,7 @@ export function TransacoesProvider({ children, initialData  }: { children: React
             setTransacoes(prev => prev.filter(t => t.id !== id))
             toast.success(messages.sucesso)
             fecharModais()
+            onSuccess?.()
             router.refresh()
         } catch {
             toast.error(messages.erro)

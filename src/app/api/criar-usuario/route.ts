@@ -1,14 +1,29 @@
-import { createClient } from "@supabase/supabase-js"
-import { NextRequest, NextResponse } from "next/server"
+import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json()
         const { name, user_name, email, password, role, workspaceId } = body
 
-        const supabaseClient = createClient(
+        const cookieStore = await cookies()
+        const supabaseClient = createServerClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            {
+                cookies: {
+                    getAll() {
+                        return cookieStore.getAll()
+                    },
+                    setAll(cookiesToSet) {
+                        cookiesToSet.forEach(({ name, value, options }) =>
+                            cookieStore.set(name, value, options)
+                        )
+                    }
+                }
+            }
         )
 
         const { data: { user } } = await supabaseClient.auth.getUser()
@@ -59,7 +74,16 @@ export async function POST(request: NextRequest) {
             throw userError
         }
 
-        return NextResponse.json({ success: true })
+        return NextResponse.json({ success: true, usuario: {
+            id: authData.user.id,
+            name,
+            user_name,
+            email,
+            role,
+            workspaceId,
+            active: true,
+            companyId: null
+        }})
     } catch (error) {
         const message = error instanceof Error ? error.message : 'Erro desconhecido'
         return NextResponse.json({ error: message }, { status: 500 })

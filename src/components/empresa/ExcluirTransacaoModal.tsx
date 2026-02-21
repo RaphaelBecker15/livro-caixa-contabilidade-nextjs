@@ -3,7 +3,7 @@ import Modal from "@/components/Modal";
 import { useTransacoes } from "@/contexts/empresa/ApiTransacoesContext";
 import { useState } from "react";
 
-export function ExcluirTransacaoModal() {
+export function ExcluirTransacaoModal({ onExcluir }: { onExcluir?: () => void }) {
 
     const { transacaoEmEdicao, modalExcluirAberto, fecharModais, excluirTransacao } = useTransacoes()
     const [loading, setLoading] = useState(false)
@@ -13,7 +13,7 @@ export function ExcluirTransacaoModal() {
         if (!transacaoEmEdicao) return
 
         setLoading(true)
-        await excluirTransacao(transacaoEmEdicao.id)
+        await excluirTransacao(transacaoEmEdicao.id, onExcluir)
         setLoading(false)
     }
 

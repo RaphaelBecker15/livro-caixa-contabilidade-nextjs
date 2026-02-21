@@ -15,6 +15,7 @@ type UsuariosContextType = {
     abrirModalEditar: (usuario: Usuario) => void
     abrirModalExcluir: (usuario: Usuario) => void
     fecharModais: () => void
+    adicionarUsuario: (usuario: Usuario) => void
     salvarEdicao: (dadosAtualizados: Usuario) => Promise<void>
     excluirUsuario: (id: string) => Promise<void>
 }
@@ -52,6 +53,10 @@ export function UsuariosProvider({children, initialData}: {children: ReactNode, 
         setModalEditarAberto(false)
         setModalExcluirAberto(false)
         setUsuarioEmEdicao(null)
+    }
+
+    const adicionarUsuario = (usuario: Usuario) => {
+        setUsuarios(prev => [usuario, ...prev])
     }
 
     const salvarEdicao = async (dadosAtualizados: Usuario) => {
@@ -107,6 +112,7 @@ export function UsuariosProvider({children, initialData}: {children: ReactNode, 
             abrirModalEditar,
             abrirModalExcluir,
             fecharModais,
+            adicionarUsuario,
             salvarEdicao,
             excluirUsuario
         }}>

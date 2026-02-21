@@ -146,31 +146,31 @@ export function LivroCaixaClient({ transactions }: { transactions: TransacaoComC
                             )}
                         </tbody>
                     </table>
-                    {totalPaginas > 1 && (
-                        <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between text-sm">
-                            <span className="text-slate-500">
-                                Mostrando {((pagina - 1) * itensPorPagina) + 1} a {Math.min(pagina * itensPorPagina, transacoesFiltradas.length)} de {transacoesFiltradas.length} lançamentos
-                            </span>
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => setPagina(prev => Math.max(prev - 1, 1))}
-                                    disabled={pagina === 1}
-                                    className="cursor-pointer px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                                >
-                                    Anterior
-                                </button>
-                                <span className="font-medium text-slate-700">{pagina} / {totalPaginas}</span>
-                                <button
-                                    onClick={() => setPagina(prev => Math.min(prev + 1, totalPaginas))}
-                                    disabled={pagina === totalPaginas}
-                                    className="cursor-pointer px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                                >
-                                    Próxima
-                                </button>
-                            </div>
-                        </div>
-                    )}
                 </div>
+                {totalPaginas > 1 && (
+                    <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between text-sm">
+                        <span className="text-slate-500">
+                            Mostrando {((pagina - 1) * itensPorPagina) + 1} a {Math.min(pagina * itensPorPagina, transacoesFiltradas.length)} de {transacoesFiltradas.length} lançamentos
+                        </span>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setPagina(prev => Math.max(prev - 1, 1))}
+                                disabled={pagina === 1}
+                                className="cursor-pointer px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                            >
+                                Anterior
+                            </button>
+                            <span className="font-medium text-slate-700">{pagina} / {totalPaginas}</span>
+                            <button
+                                onClick={() => setPagina(prev => Math.min(prev + 1, totalPaginas))}
+                                disabled={pagina === totalPaginas}
+                                className="cursor-pointer px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                            >
+                                Próxima
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     )
