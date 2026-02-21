@@ -1,19 +1,32 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { transacoes, empresas } from "@/lib/types";
+import { createClient } from "@/lib/supabase/server";
 import { LivroCaixaClient } from "@/app/admin/LivroCaixaClient";
 
 interface PageProps {
-  params: Promise<{ id: string }>;
+    params: Promise<{ id: string }>;
 }
 
 export default async function LivroCaixa({ params }: PageProps) {
 
     const { id } = await params
+    const supabase = await createClient()
 
-    const transactions = transacoes.filter(tx => tx.empresaId === id)
+    const { data: empresa } = await supabase
+        .from('Company')
+        .select('*')
+        .eq('id', id)
+        .single()
 
-    const companies = empresas.find(c => c.id === id)
+    const { data: transacoes } = await supabase
+        .from('Transaction')
+        .select(`
+            *,
+            category:categoryId (name)
+        `)
+        .eq('companyId', id)
+        .is('deletedAt', null)
+        .order('date', { ascending: false })
 
     return (
         <div className="space-y-6">
@@ -26,13 +39,13 @@ export default async function LivroCaixa({ params }: PageProps) {
                         </div>
                     </Link>
                     <div>
-                        <h1 className="text-2xl font-bold text-slate-900">{companies?.nome}</h1>
-                        <p className="text-sm text-slate-500">CNPJ: {companies?.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5")}</p>
+                        <h1 className="text-2xl font-bold text-slate-900">{empresa?.name}</h1>
+                        <p className="text-sm text-slate-500">CNPJ: {empresa?.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5")}</p>
                     </div>
                 </div>
             </div>
 
-            <LivroCaixaClient transactions={transactions}/>
+            <LivroCaixaClient transactions={transacoes ?? []}/>
             
         </div>
     )

@@ -53,8 +53,9 @@ export function AddCompanyButton() {
             setOpenModal(false)
             setForm({ name: '', user_name: '', email: '', cnpj: '', password: '' })
             router.refresh()
-        } catch {
-            toast.error('Erro ao criar empresa. Tente novamente.')
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Erro ao criar. Tente novamente.'
+            toast.error(message)
         } finally {
             setLoading(false)
         }

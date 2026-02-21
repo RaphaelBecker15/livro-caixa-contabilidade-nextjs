@@ -1,23 +1,17 @@
 "use client";
 import { TrendingUp, TrendingDown, Wallet, type LucideIcon } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Transacao } from "@/lib/types";
 
-interface StatCardProps {
-    label: string,
-    value: string,
-    icon: LucideIcon,
-    colorClass: string
+interface TransacaoComCategoria extends Transacao {
+    category: { name: string } | null
 }
 
-interface TransacoesProps {
-    id: string
-    valor: number
-    tipo: string
-    descricao: string
-    data: string
-    categoria: string
-    anexo: string
-    empresaId: string
+interface StatCardProps {
+    label: string
+    value: string
+    icon: LucideIcon
+    colorClass: string
 }
 
 const StatCard = ({ label, value, icon: Icon, colorClass }: StatCardProps) => (
@@ -32,24 +26,58 @@ const StatCard = ({ label, value, icon: Icon, colorClass }: StatCardProps) => (
     </div>
 );
 
-export function LivroCaixaClient({ transactions }: { transactions: TransacoesProps[] }) {
+export function LivroCaixaClient({ transactions }: { transactions: TransacaoComCategoria[] }) {
 
     const [mesSelecionado, setMesSelecionado] = useState(() => {
         const hoje = new Date()
         return `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`
     })
 
-    const transacoesFiltradas = transactions.filter(tx => tx.data.startsWith(mesSelecionado))
+    const [pagina, setPagina] = useState(1)
+    const itensPorPagina = 10
+
+    const [tipoFiltro, setTipoFiltro] = useState<'all' | 'income' | 'expense'>('all')
+
+    const transacoesFiltradas = transactions.filter(tx => {
+        const pertenceMes = tx.date.startsWith(mesSelecionado)
+        const pertenceTipo = tipoFiltro === 'all' || tx.type === tipoFiltro
+        return pertenceMes && pertenceTipo
+    })
+
+    const saldoAcumulado = transactions.filter(tx => {
+        const mesTx = tx.date.substring(0, 7)
+        return mesTx <= mesSelecionado
+    })
+
+    const totalEntradasAcumulado = saldoAcumulado
+        .filter(tx => tx.type === 'income')
+        .reduce((acc, tx) => acc + Number(tx.amount), 0)
+
+    const totalSaidasAcumulado = saldoAcumulado
+        .filter(tx => tx.type === 'expense')
+        .reduce((acc, tx) => acc + Number(tx.amount), 0)
+
+    const balance = totalEntradasAcumulado - totalSaidasAcumulado
 
     const totalEntradas = transacoesFiltradas
-        .filter(tx => tx.tipo === 'entrada')
-        .reduce((acc, tx) => acc + tx.valor, 0)
+        .filter(tx => tx.type === 'income')
+        .reduce((acc, tx) => acc + Number(tx.amount), 0)
 
     const totalSaidas = transacoesFiltradas
-        .filter(tx => tx.tipo === 'saida')
-        .reduce((acc, tx) => acc + tx.valor, 0)
+        .filter(tx => tx.type === 'expense')
+        .reduce((acc, tx) => acc + Number(tx.amount), 0)
+    
 
-    const balance = totalEntradas - totalSaidas
+    const totalPaginas = Math.ceil(transacoesFiltradas.length / itensPorPagina)
+    const transacoesPaginadas = transacoesFiltradas.slice(
+        (pagina - 1) * itensPorPagina,
+        pagina * itensPorPagina
+    )
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setPagina(1)
+    }, [mesSelecionado, tipoFiltro])
 
     return (
         <>
@@ -64,7 +92,20 @@ export function LivroCaixaClient({ transactions }: { transactions: TransacoesPro
             <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                 <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/50 flex justify-between items-center">
                     <h3 className="font-semibold text-slate-800">Lançamentos</h3>
-                    <input type="month" value={mesSelecionado} onChange={e => setMesSelecionado(e.target.value)} className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"></input>
+                    <div className="flex items-center gap-3">
+                        <div className="flex rounded-lg border border-gray-200 overflow-hidden text-sm font-semibold">
+                            <button onClick={() => setTipoFiltro('all')} className={`cursor-pointer px-3 py-2 transition-colors ${tipoFiltro === 'all' ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}`}>
+                                Todos
+                            </button>
+                            <button onClick={() => setTipoFiltro('income')} className={`cursor-pointer px-3 py-2 transition-colors ${tipoFiltro === 'income' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}`}>
+                                Entradas
+                            </button>
+                            <button onClick={() => setTipoFiltro('expense')} className={`cursor-pointer px-3 py-2 transition-colors ${tipoFiltro === 'expense' ? 'bg-rose-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}`}>
+                                Saídas
+                            </button>
+                        </div>
+                        <input type="month" value={mesSelecionado} onChange={e => setMesSelecionado(e.target.value)} className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm outline-none transition-all" />
+                    </div>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm">
@@ -78,17 +119,21 @@ export function LivroCaixaClient({ transactions }: { transactions: TransacoesPro
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {transacoesFiltradas.length > 0 ? (
-                                transacoesFiltradas.map((tx: TransacoesProps) => (
+                            {transacoesPaginadas.length > 0 ? (
+                                transacoesPaginadas.map(tx => (
                                     <tr key={tx.id} className='hover:bg-slate-50/50 transition-colors group'>
-                                        <td className='px-6 py-4 font-medium text-sm'>{new Date(tx.data + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
-                                        <td className='px-6 py-4 font-medium text-sm'>{tx.descricao}</td>
+                                        <td className='px-6 py-4 font-medium text-sm'>{new Date(tx.date + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
+                                        <td className='px-6 py-4 font-medium text-sm'>{tx.description}</td>
                                         <td className="px-6 py-4">
-                                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">{tx.categoria || 'Sem categoria'}</span>
+                                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                                                {tx.category?.name ?? 'Sem categoria'}
+                                            </span>
                                         </td>
-                                        <td className={`px-6 py-4 font-medium ${tx.tipo === 'entrada' ? 'text-emerald-600' : 'text-rose-600'}`}>{tx.tipo === 'entrada' ? 'Entrada' : 'Saída'}</td>
-                                        <td className={`px-6 py-4 text-right font-bold ${tx.tipo === 'entrada' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                                            {tx.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                        <td className={`px-6 py-4 font-medium ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                            {tx.type === 'income' ? 'Entrada' : 'Saída'}
+                                        </td>
+                                        <td className={`px-6 py-4 text-right font-bold ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                            {Number(tx.amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                         </td>
                                     </tr>
                                 ))
@@ -101,6 +146,30 @@ export function LivroCaixaClient({ transactions }: { transactions: TransacoesPro
                             )}
                         </tbody>
                     </table>
+                    {totalPaginas > 1 && (
+                        <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between text-sm">
+                            <span className="text-slate-500">
+                                Mostrando {((pagina - 1) * itensPorPagina) + 1} a {Math.min(pagina * itensPorPagina, transacoesFiltradas.length)} de {transacoesFiltradas.length} lançamentos
+                            </span>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setPagina(prev => Math.max(prev - 1, 1))}
+                                    disabled={pagina === 1}
+                                    className="cursor-pointer px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    Anterior
+                                </button>
+                                <span className="font-medium text-slate-700">{pagina} / {totalPaginas}</span>
+                                <button
+                                    onClick={() => setPagina(prev => Math.min(prev + 1, totalPaginas))}
+                                    disabled={pagina === totalPaginas}
+                                    className="cursor-pointer px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    Próxima
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </>

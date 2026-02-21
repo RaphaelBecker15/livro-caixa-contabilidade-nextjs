@@ -1,6 +1,5 @@
 "use client";
 import { createContext, useContext, useState, ReactNode } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { Empresa } from "@/lib/types";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -29,7 +28,6 @@ const messages = {
 
 export function EmpresasProvider({ children, initialData }: {children: ReactNode, initialData: Empresa[]}) {
 
-    const supabase = createClient()
     const router = useRouter()
 
     const [empresas, setEmpresas] = useState<Empresa[]>(initialData)
@@ -59,28 +57,20 @@ export function EmpresasProvider({ children, initialData }: {children: ReactNode
 
     const salvarEdicao = async (dadosAtualizados: Empresa) => {
         try {
-            const { error } = await supabase
-                .from('Company')
-                .update({
+            const response = await fetch('/api/editar-empresa', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: dadosAtualizados.id,
                     name: dadosAtualizados.name,
                     user_name: dadosAtualizados.user_name,
                     email: dadosAtualizados.email,
-                    cnpj: dadosAtualizados.cnpj,
+                    cnpj: dadosAtualizados.cnpj
                 })
-                .eq('id', dadosAtualizados.id)
+            })
 
-            if (error) throw error
-
-            const { error: userError } = await supabase
-                .from('User')
-                .update({
-                    name: dadosAtualizados.name,
-                    user_name: dadosAtualizados.user_name,
-                    email: dadosAtualizados.email,
-                })
-                .eq('companyId', dadosAtualizados.id)
-
-            if (userError) throw userError
+            const data = await response.json()
+            if (!response.ok) throw new Error(data.error)
 
             setEmpresas(prev =>
                 prev.map(e => e.id === dadosAtualizados.id ? dadosAtualizados : e)

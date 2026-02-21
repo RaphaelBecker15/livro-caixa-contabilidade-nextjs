@@ -1,21 +1,14 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { SpinLoader } from "@/components/SpinLoader";
 
 export function NavigationLoader() {
     const pathname = usePathname();
-    const previousPathname = useRef(pathname);
     const [loading, setLoading] = useState(false);
 
-    // eslint-disable-next-line react-hooks/refs
-    if (previousPathname.current !== pathname) {
-        // eslint-disable-next-line react-hooks/refs
-        previousPathname.current = pathname;
-        setLoading(false);
-    }
-
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(false);
     }, [pathname]);
 

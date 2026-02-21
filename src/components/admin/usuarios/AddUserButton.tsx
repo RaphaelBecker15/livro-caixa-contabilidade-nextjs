@@ -49,8 +49,9 @@ export function AddUserButton() {
             setOpenModal(false)
             setForm({ name: '', user_name: '', email: '', role: 'admin', password: '' })
             router.refresh()
-        } catch {
-            toast.error('Erro ao criar usuário. Tente novamente.')
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Erro ao criar. Tente novamente.'
+            toast.error(message)
         } finally {
             setLoading(false)
         }

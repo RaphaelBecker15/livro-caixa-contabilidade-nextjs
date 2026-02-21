@@ -17,6 +17,7 @@ export function EmpresasClient() {
                     <tr>
                         <th className="px-6 py-4 font-semibold text-slate-700">Empresa</th>
                         <th className="px-6 py-4 font-semibold text-slate-700">CNPJ</th>
+                        <th className="px-6 py-4 font-semibold text-slate-700">Email</th>
                         <th className="px-6 py-4 font-semibold text-slate-700 text-right">Ações</th>
                     </tr>
                 </thead>
@@ -33,6 +34,7 @@ export function EmpresasClient() {
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 text-slate-600 font-medium text-sm">{empresa.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5")}</td>
+                                <td className="px-6 py-4 text-slate-600 font-medium text-sm">{empresa.email}</td>
                                 <td className="px-6 py-4 text-right">
                                     <CompanyActionButtons id={empresa.id}/>
                                 </td>

@@ -5,6 +5,15 @@ export async function POST(request: NextRequest) {
     try {
         const { id } = await request.json()
 
+        const supabaseClient = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        )
+        const { data: { user } } = await supabaseClient.auth.getUser()
+        if (!user || user.user_metadata?.role !== 'super_admin') {
+            return NextResponse.json({ error: 'Sem permissão.' }, { status: 403 })
+        }
+
         const supabaseAdmin = createClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
             process.env.SUPABASE_SERVICE_ROLE_KEY!

@@ -3,13 +3,15 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
     try {
-        const { id } = await request.json()
+        const { id, name, user_name, email, cnpj } = await request.json()
 
         const supabaseClient = createClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
             process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
         )
+
         const { data: { user } } = await supabaseClient.auth.getUser()
+
         if (!user || user.user_metadata?.role !== 'super_admin') {
             return NextResponse.json({ error: 'Sem permissão.' }, { status: 403 })
         }
@@ -19,6 +21,13 @@ export async function POST(request: NextRequest) {
             process.env.SUPABASE_SERVICE_ROLE_KEY!
         )
 
+        const { error: empresaError } = await supabaseAdmin
+            .from('Company')
+            .update({ name, user_name, email, cnpj })
+            .eq('id', id)
+
+        if (empresaError) throw empresaError
+
         const { data: usuario, error: userFetchError } = await supabaseAdmin
             .from('User')
             .select('id')
@@ -27,21 +36,17 @@ export async function POST(request: NextRequest) {
 
         if (userFetchError) throw userFetchError
 
-        const { error: empresaError } = await supabaseAdmin
-            .from('Company')
-            .update({ deletedAt: new Date().toISOString() })
-            .eq('id', id)
-
-        if (empresaError) throw empresaError
-
         const { error: userError } = await supabaseAdmin
             .from('User')
-            .update({ deletedAt: new Date().toISOString() })
+            .update({ name, user_name, email })
             .eq('companyId', id)
 
         if (userError) throw userError
 
-        const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(usuario.id)
+        const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(
+            usuario.id,
+            { email }
+        )
 
         if (authError) throw authError
 

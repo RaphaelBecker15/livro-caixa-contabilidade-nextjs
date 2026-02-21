@@ -27,18 +27,20 @@ export default function Login() {
             let email = identifier
 
             if (!isEmail) {
-                const { data: user, error } = await supabase
-                    .from('User')
-                    .select('email')
-                    .eq('user_name', identifier)
-                    .single()
+                const response = await fetch('/api/buscar-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_name: identifier })
+                })
 
-                if (error || !user) {
+                const data = await response.json()
+
+                if (!response.ok) {
                     setErro('Usuário não encontrado.')
                     return
                 }
 
-                email = user.email
+                email = data.email
             }
 
             const { data, error } = await supabase.auth.signInWithPassword({
