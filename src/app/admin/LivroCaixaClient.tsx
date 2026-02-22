@@ -2,6 +2,9 @@
 import { TrendingUp, TrendingDown, Wallet, type LucideIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Transacao } from "@/lib/types";
+import { Paperclip } from "lucide-react";
+import { AttachmentsModal } from "@/components/empresa/AttachmentsModal";
+import { RelatorioButton } from "@/components/RelatorioButton";
 
 interface TransacaoComCategoria extends Transacao {
     category: { name: string } | null
@@ -26,7 +29,7 @@ const StatCard = ({ label, value, icon: Icon, colorClass }: StatCardProps) => (
     </div>
 );
 
-export function LivroCaixaClient({ transactions }: { transactions: TransacaoComCategoria[] }) {
+export function LivroCaixaClient({ transactions, nomeEmpresa }: { transactions: TransacaoComCategoria[], nomeEmpresa: string }) {
 
     const [mesSelecionado, setMesSelecionado] = useState(() => {
         const hoje = new Date()
@@ -37,6 +40,7 @@ export function LivroCaixaClient({ transactions }: { transactions: TransacaoComC
     const itensPorPagina = 10
 
     const [tipoFiltro, setTipoFiltro] = useState<'all' | 'income' | 'expense'>('all')
+    const [anexoAberto, setAnexoAberto] = useState<{ attachments: string[], descricao: string } | null>(null)
 
     const transacoesFiltradas = transactions.filter(tx => {
         const pertenceMes = tx.date.startsWith(mesSelecionado)
@@ -91,7 +95,15 @@ export function LivroCaixaClient({ transactions }: { transactions: TransacaoComC
             {/* Transactions Table */}
             <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                 <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/50 flex justify-between items-center">
-                    <h3 className="font-semibold text-slate-800">Lançamentos</h3>
+                    <div className="flex items-center gap-4">
+                        <h3 className="font-semibold text-slate-800">Lançamentos</h3>
+                        <RelatorioButton
+                            transacoes={transactions}
+                            transacoesFiltradas={transacoesFiltradas}
+                            mesSelecionado={mesSelecionado}
+                            nomeEmpresa={nomeEmpresa}
+                        />
+                    </div>
                     <div className="flex items-center gap-3">
                         <div className="flex rounded-lg border border-gray-200 overflow-hidden text-sm font-semibold">
                             <button onClick={() => setTipoFiltro('all')} className={`cursor-pointer px-3 py-2 transition-colors ${tipoFiltro === 'all' ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}`}>
@@ -115,7 +127,8 @@ export function LivroCaixaClient({ transactions }: { transactions: TransacaoComC
                                 <th className="px-6 py-4 font-semibold text-slate-700">Descrição</th>
                                 <th className="px-6 py-4 font-semibold text-slate-700">Categoria</th>
                                 <th className="px-6 py-4 font-semibold text-slate-700">Tipo</th>
-                                <th className="px-6 py-4 font-semibold text-slate-700 text-right">Valor</th>
+                                <th className="px-6 py-4 font-semibold text-slate-700">Valor</th>
+                                <th className="px-6 py-4 font-semibold text-slate-700 text-center">Ações</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -132,14 +145,25 @@ export function LivroCaixaClient({ transactions }: { transactions: TransacaoComC
                                         <td className={`px-6 py-4 font-medium ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
                                             {tx.type === 'income' ? 'Entrada' : 'Saída'}
                                         </td>
-                                        <td className={`px-6 py-4 text-right font-bold ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                        <td className={`px-6 py-4 font-bold ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
                                             {Number(tx.amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                        </td>
+                                        <td className="text-center">
+                                            {tx.attachments?.length > 0 && (
+                                                <button
+                                                    onClick={() => setAnexoAberto({ attachments: tx.attachments, descricao: tx.description })}
+                                                    className="cursor-pointer text-slate-400 hover:text-blue-600 transition-colors"
+                                                    title="Ver anexos"
+                                                >
+                                                    <Paperclip size={14} />
+                                                </button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
+                                    <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
                                         Nenhum lançamento encontrado.
                                     </td>
                                 </tr>
@@ -172,6 +196,14 @@ export function LivroCaixaClient({ transactions }: { transactions: TransacaoComC
                     </div>
                 )}
             </div>
+            {anexoAberto && (
+                <AttachmentsModal
+                    isOpen={!!anexoAberto}
+                    onClose={() => setAnexoAberto(null)}
+                    attachments={anexoAberto.attachments}
+                    descricao={anexoAberto.descricao}
+                />
+            )}
         </>
     )
 }

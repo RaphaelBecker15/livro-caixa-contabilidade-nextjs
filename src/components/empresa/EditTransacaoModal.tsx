@@ -4,12 +4,17 @@ import ModalTransaction from "@/components/ModalTransaction";
 import { useTransacoes } from "@/contexts/empresa/ApiTransacoesContext";
 import { useState } from "react";
 import { Transacao } from "@/lib/types";
+import { FileUpload } from "@/components/empresa/FileUpload"
+import { createClient } from "@/lib/supabase/client"
+import { X, FileText, Image } from "lucide-react"
 
 interface EditTransacaoModalProps {
     categorias: { id: string, name: string }[]
 }
 
 export function EditTransacaoModal({ categorias }: EditTransacaoModalProps) {
+
+    const supabase = createClient()
 
     const { transacaoEmEdicao, modalEditarAberto, fecharModais, salvarEdicao } = useTransacoes()
 
@@ -22,23 +27,53 @@ export function EditTransacaoModal({ categorias }: EditTransacaoModalProps) {
         categoryId: transacaoEmEdicao?.categoryId ?? ""
     })
 
+    const [files, setFiles] = useState<File[]>([])
+    const [anexosExistentes, setAnexosExistentes] = useState<string[]>(
+        transacaoEmEdicao?.attachments ?? []
+    )
+
+    const getFileName = (path: string) => path.split('/').pop() ?? path
+
+    const removerAnexoExistente = (path: string) => {
+        setAnexosExistentes(prev => prev.filter(a => a !== path))
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!transacaoEmEdicao) return
-
         setLoading(true)
+
+        const novosAnexos: string[] = []
+        for (const file of files) {
+            const ext = file.name.split('.').pop()
+            const nomeBase = file.name.replace(`.${ext}`, '').replace(/[^a-zA-Z0-9._-]/g, '_')
+            const path = `${transacaoEmEdicao.companyId}/${nomeBase}_${Date.now()}.${ext}`
+
+            const { error: uploadError } = await supabase.storage
+                .from('attachments')
+                .upload(path, file)
+            if (uploadError) throw uploadError
+            novosAnexos.push(path)
+        }
+
         await salvarEdicao({
             ...transacaoEmEdicao,
             ...form,
-            amount: parseFloat(String(form.amount))
+            amount: parseFloat(String(form.amount)),
+            attachments: [...anexosExistentes, ...novosAnexos]
         })
         setLoading(false)
+    }
+
+    const handleClose = () => {
+        setFiles([])
+        fecharModais()
     }
 
     if (!transacaoEmEdicao) return null
 
     return (
-        <ModalTransaction isOpen={modalEditarAberto} setModalOpen={fecharModais} setTittle="Editar Transação">
+        <ModalTransaction isOpen={modalEditarAberto} setModalOpen={handleClose} setTittle="Editar Transação">
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
                 <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Data</label>
@@ -67,8 +102,30 @@ export function EditTransacaoModal({ categorias }: EditTransacaoModalProps) {
                         ))}
                     </select>
                 </div>
+                <div className="md:col-span-2 space-y-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Anexos</label>
+                    {anexosExistentes.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                            {anexosExistentes.map((path, index) => (
+                                <div key={index} className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-lg w-[160px] flex-shrink-0">
+                                    <span className="flex-shrink-0 text-slate-500">
+                                        {['jpg','jpeg','png','webp'].includes(path.split('.').pop() ?? '')
+                                            ? <Image size={14} />
+                                            : <FileText size={14} />
+                                        }
+                                    </span>
+                                    <span className="truncate text-slate-600 text-xs flex-1">{getFileName(path)}</span>
+                                    <button type="button" onClick={() => removerAnexoExistente(path)} className="cursor-pointer text-slate-400 hover:text-rose-500 transition-colors flex-shrink-0">
+                                        <X size={12} />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <FileUpload files={files} onChange={setFiles} />
+                </div>
                 <div className="md:col-span-2 flex justify-end gap-2 mt-2">
-                    <button type="button" onClick={fecharModais} className="cursor-pointer px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-medium transition-colors">Cancelar</button>
+                    <button type="button" onClick={handleClose} className="cursor-pointer px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-medium transition-colors">Cancelar</button>
                     <button type="submit" disabled={loading} className="cursor-pointer px-6 py-2 bg-slate-900 text-white hover:bg-emerald-600 rounded-lg font-bold flex items-center gap-2 transition-all shadow-md">
                         <Save size={18}/> {loading ? 'Salvando...' : 'Salvar'}
                     </button>

@@ -5,8 +5,9 @@ import { EditTransacaoModal } from "@/components/empresa/EditTransacaoModal";
 import { ExcluirTransacaoModal } from "@/components/empresa/ExcluirTransacaoModal";
 import { Transacao } from "@/lib/types";
 import { useState, useEffect } from "react";
+import { RelatorioButton } from "@/components/RelatorioButton";
 
-export function TransacoesClient({ categorias }: { categorias: { id: string, name: string }[] }) {
+export function TransacoesClient({ categorias, nomeEmpresa }: { categorias: { id: string, name: string }[], nomeEmpresa: string }) {
 
     const { transacoes, transacaoEmEdicao, mesSelecionado, setMesSelecionado } = useTransacoes()
 
@@ -14,6 +15,7 @@ export function TransacoesClient({ categorias }: { categorias: { id: string, nam
     const itensPorPagina = 10
 
     const [tipoFiltro, setTipoFiltro] = useState<'all' | 'income' | 'expense'>('all')
+    const [anexoAberto, setAnexoAberto] = useState<{ attachments: string[], descricao: string } | null>(null)
 
     const transacoesFiltradas = transacoes.filter(tx => {
         const pertenceMes = tx.date.startsWith(mesSelecionado)
@@ -43,7 +45,16 @@ export function TransacoesClient({ categorias }: { categorias: { id: string, nam
     return (
         <>
             <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/50 flex justify-between items-center">
-                <h3 className="font-semibold text-slate-800">Lançamentos</h3>
+                <div className="flex items-center gap-4">
+                    <h3 className="font-semibold text-slate-800">Lançamentos</h3>
+                    <RelatorioButton
+                        transacoes={transacoes}
+                        transacoesFiltradas={transacoesFiltradas}
+                        mesSelecionado={mesSelecionado}
+                        nomeEmpresa={nomeEmpresa}
+                        categorias={categorias}
+                    />
+                </div>
                 <div className="flex items-center gap-3">
                     <div className="flex rounded-lg border border-gray-200 overflow-hidden text-sm font-semibold">
                         <button onClick={() => setTipoFiltro('all')} className={`cursor-pointer px-3 py-2 transition-colors ${tipoFiltro === 'all' ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}`}>

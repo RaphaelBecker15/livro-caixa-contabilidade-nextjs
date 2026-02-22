@@ -74,6 +74,7 @@ export function TransacoesProvider({ children, initialData  }: { children: React
                     amount: dadosAtualizados.amount,
                     type: dadosAtualizados.type,
                     categoryId: dadosAtualizados.categoryId,
+                    attachments: dadosAtualizados.attachments,
                 })
                 .eq('id', dadosAtualizados.id)
 

@@ -26,6 +26,7 @@ export type Transacao = {
     companyId: string
     workspaceId: string
     userId: string
+    attachments: string[]
     deletedAt?: string | null
 }
 

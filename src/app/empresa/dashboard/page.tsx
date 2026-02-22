@@ -1,5 +1,5 @@
-import { createClient } from "@/lib/supabase/server"
-import { TransacoesProvider } from "@/contexts/empresa/ApiTransacoesContext"
+import { createClient } from "@/lib/supabase/server";
+import { TransacoesProvider } from "@/contexts/empresa/ApiTransacoesContext";
 import { AddTransactionButton } from "@/components/empresa/AddTransactionButton";
 import { TransacoesClient } from "@/app/empresa/TransacoesClient";
 import { StatsCards } from "@/components/empresa/StatsCards";
@@ -11,6 +11,12 @@ export default async function Dashboard() {
 
     const companyId = user?.user_metadata?.companyId
     const workspaceId = user?.user_metadata?.workspaceId
+
+    const { data: empresa } = await supabase
+        .from('Company')
+        .select('name')
+        .eq('id', companyId)
+        .single()
 
     const { data: transacoes } = await supabase
         .from('Transaction')
@@ -35,7 +41,9 @@ export default async function Dashboard() {
                             <h1 className="text-2xl font-bold text-slate-900">Meu Livro Caixa</h1>
                         </div>
                     </div>
-                    <AddTransactionButton companyId={companyId} workspaceId={workspaceId} userId={user!.id} categorias={categorias ?? []}/>
+                    <div className="flex items-center gap-3">
+                        <AddTransactionButton companyId={companyId} workspaceId={workspaceId} userId={user!.id} categorias={categorias ?? []}/>
+                    </div>
                 </div>
 
                 {/* Stats Cards (Specific to this company) */}
@@ -45,7 +53,7 @@ export default async function Dashboard() {
 
                 {/* Transactions Table */}
                 <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                    <TransacoesClient categorias={categorias ?? []}/>
+                    <TransacoesClient categorias={categorias ?? []} nomeEmpresa={empresa?.name ?? ''}/>
                 </div>
             </div>
         </TransacoesProvider>
