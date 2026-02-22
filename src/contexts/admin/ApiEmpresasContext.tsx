@@ -11,12 +11,15 @@ type EmpresasContextType = {
     modalEditarAberto: boolean
     modalExcluirAberto: boolean
 
+    busca: string
+
     abrirModalEditar: (empresa: Empresa) => void
     abrirModalExcluir: (empresa: Empresa) => void
     fecharModais: () => void
     adicionarEmpresa: (empresa: Empresa) => void
     salvarEdicao: (dadosAtualizados: Empresa) => Promise<void>
     excluirEmpresa: (id: string) => Promise<void>
+    setBusca: (busca: string) => void
 }
 
 const ApiEmpresasContext = createContext<EmpresasContextType | undefined>(undefined)
@@ -34,6 +37,7 @@ export function EmpresasProvider({ children, initialData }: {children: ReactNode
     const [empresaEmEdicao, setEmpresaEmEdicao] = useState<Empresa | null>(null)
     const [modalEditarAberto, setModalEditarAberto] = useState(false)
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false)
+    const [busca, setBusca] = useState('')
 
     const adicionarEmpresa = (empresa: Empresa) => {
         setEmpresas(prev => [empresa, ...prev])
@@ -109,12 +113,15 @@ export function EmpresasProvider({ children, initialData }: {children: ReactNode
             empresaEmEdicao,
             modalEditarAberto,
             modalExcluirAberto,
+            busca,
             adicionarEmpresa,
             abrirModalEditar,
             abrirModalExcluir,
             fecharModais,
             salvarEdicao,
-            excluirEmpresa
+            excluirEmpresa,
+            setBusca
+
         }}>
             {children}
         </ApiEmpresasContext.Provider>

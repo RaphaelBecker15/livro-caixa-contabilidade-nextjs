@@ -4,10 +4,9 @@ import { RelatorioButton } from "@/components/RelatorioButton"
 
 interface Props {
     nomeEmpresa: string
-    categorias: { id: string, name: string }[]
 }
 
-export function RelatorioButtonWrapper({ nomeEmpresa, categorias }: Props) {
+export function RelatorioButtonWrapper({ nomeEmpresa }: Props) {
     const { transacoes, mesSelecionado } = useTransacoes()
 
     const transacoesFiltradas = transacoes.filter(tx =>
@@ -20,7 +19,6 @@ export function RelatorioButtonWrapper({ nomeEmpresa, categorias }: Props) {
             transacoesFiltradas={transacoesFiltradas}
             mesSelecionado={mesSelecionado}
             nomeEmpresa={nomeEmpresa}
-            categorias={categorias}
         />
     )
 }

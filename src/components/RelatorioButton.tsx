@@ -9,7 +9,6 @@ interface Transacao {
     description: string
     amount: number
     type: 'income' | 'expense'
-    category?: { name: string } | null
 }
 
 interface RelatorioButtonProps {
@@ -17,7 +16,6 @@ interface RelatorioButtonProps {
     transacoesFiltradas: Transacao[]
     mesSelecionado: string
     nomeEmpresa: string
-    categorias?: { id: string, name: string }[]
 }
 
 const formatCurrency = (value: number) =>
@@ -32,7 +30,7 @@ const getMesAno = (mes: string) => {
     return `${meses[parseInt(month) - 1]} de ${ano}`
 }
 
-export function RelatorioButton({ transacoes, transacoesFiltradas, mesSelecionado, nomeEmpresa, categorias }: RelatorioButtonProps) {
+export function RelatorioButton({ transacoes, transacoesFiltradas, mesSelecionado, nomeEmpresa }: RelatorioButtonProps) {
 
     const [aberto, setAberto] = useState(false)
     const ref = useRef<HTMLDivElement>(null)
@@ -46,15 +44,6 @@ export function RelatorioButton({ transacoes, transacoesFiltradas, mesSelecionad
         document.addEventListener('mousedown', handleClick)
         return () => document.removeEventListener('mousedown', handleClick)
     }, [])
-
-    const getCategoryName = (tx: Transacao) => {
-        if (tx.category?.name) return tx.category.name
-        if (categorias) {
-            const cat = categorias.find(c => c.id === (tx as any).categoryId)
-            if (cat) return cat.name
-        }
-        return 'Sem categoria'
-    }
 
     const calcularStats = () => {
         const saldoAcumulado = transacoes.filter(tx => tx.date.substring(0, 7) <= mesSelecionado)
@@ -140,11 +129,10 @@ export function RelatorioButton({ transacoes, transacoesFiltradas, mesSelecionad
         // Tabela
         autoTable(doc, {
             startY: cardY + 40,
-            head: [['Data', 'Descrição', 'Categoria', 'Tipo', 'Valor']],
+            head: [['Data', 'Descrição', 'Tipo', 'Valor']],
             body: transacoesFiltradas.map(tx => [
                 formatDate(tx.date),
                 tx.description,
-                getCategoryName(tx),
                 tx.type === 'income' ? 'Entrada' : 'Saída',
                 formatCurrency(Number(tx.amount))
             ]),
@@ -153,6 +141,7 @@ export function RelatorioButton({ transacoes, transacoesFiltradas, mesSelecionad
                 textColor: [255, 255, 255],
                 fontStyle: 'bold',
                 fontSize: 9,
+                halign: 'left'
             },
             bodyStyles: {
                 fontSize: 9,
@@ -162,23 +151,25 @@ export function RelatorioButton({ transacoes, transacoesFiltradas, mesSelecionad
                 fillColor: [248, 250, 252],
             },
             columnStyles: {
-                0: { cellWidth: 22 },
-                2: { cellWidth: 35 },
-                3: { cellWidth: 20 },
-                4: { cellWidth: 32, halign: 'right' },
+                0: { cellWidth: 25 },
+                2: { cellWidth: 25 },
+                3: { cellWidth: 35, halign: 'right' },
             },
             didParseCell: (data) => {
-                if (data.column.index === 3 && data.section === 'body') {
+                if (data.column.index === 2 && data.section === 'body') {
                     const val = data.cell.raw as string
                     data.cell.styles.textColor = val === 'Entrada' ? [22, 163, 74] : [225, 29, 72]
                     data.cell.styles.fontStyle = 'bold'
                 }
-                if (data.column.index === 4 && data.section === 'body') {
+                if (data.column.index === 3 && data.section === 'body') {
                     const row = transacoesFiltradas[data.row.index]
                     if (row) {
                         data.cell.styles.textColor = row.type === 'income' ? [22, 163, 74] : [225, 29, 72]
                         data.cell.styles.fontStyle = 'bold'
                     }
+                }
+                if (data.column.index === 3 && data.section === 'head') {
+                    data.cell.styles.halign = 'right'
                 }
             },
         })

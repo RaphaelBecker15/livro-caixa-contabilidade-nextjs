@@ -6,10 +6,6 @@ import { Paperclip } from "lucide-react";
 import { AttachmentsModal } from "@/components/empresa/AttachmentsModal";
 import { RelatorioButton } from "@/components/RelatorioButton";
 
-interface TransacaoComCategoria extends Transacao {
-    category: { name: string } | null
-}
-
 interface StatCardProps {
     label: string
     value: string
@@ -29,7 +25,7 @@ const StatCard = ({ label, value, icon: Icon, colorClass }: StatCardProps) => (
     </div>
 );
 
-export function LivroCaixaClient({ transactions, nomeEmpresa }: { transactions: TransacaoComCategoria[], nomeEmpresa: string }) {
+export function LivroCaixaClient({ transactions, nomeEmpresa }: { transactions: Transacao[], nomeEmpresa: string }) {
 
     const [mesSelecionado, setMesSelecionado] = useState(() => {
         const hoje = new Date()
@@ -125,10 +121,8 @@ export function LivroCaixaClient({ transactions, nomeEmpresa }: { transactions: 
                             <tr>
                                 <th className="px-6 py-4 font-semibold text-slate-700">Data</th>
                                 <th className="px-6 py-4 font-semibold text-slate-700">Descrição</th>
-                                <th className="px-6 py-4 font-semibold text-slate-700">Categoria</th>
                                 <th className="px-6 py-4 font-semibold text-slate-700">Tipo</th>
                                 <th className="px-6 py-4 font-semibold text-slate-700">Valor</th>
-                                <th className="px-6 py-4 font-semibold text-slate-700 text-center">Ações</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -136,19 +130,7 @@ export function LivroCaixaClient({ transactions, nomeEmpresa }: { transactions: 
                                 transacoesPaginadas.map(tx => (
                                     <tr key={tx.id} className='hover:bg-slate-50/50 transition-colors group'>
                                         <td className='px-6 py-4 font-medium text-sm'>{new Date(tx.date + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
-                                        <td className='px-6 py-4 font-medium text-sm'>{tx.description}</td>
-                                        <td className="px-6 py-4">
-                                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
-                                                {tx.category?.name ?? 'Sem categoria'}
-                                            </span>
-                                        </td>
-                                        <td className={`px-6 py-4 font-medium ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                                            {tx.type === 'income' ? 'Entrada' : 'Saída'}
-                                        </td>
-                                        <td className={`px-6 py-4 font-bold ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                                            {Number(tx.amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                                        </td>
-                                        <td className="text-center">
+                                        <td className='px-6 py-4 font-medium text-sm flex items-center gap-2'>
                                             {tx.attachments?.length > 0 && (
                                                 <button
                                                     onClick={() => setAnexoAberto({ attachments: tx.attachments, descricao: tx.description })}
@@ -158,12 +140,19 @@ export function LivroCaixaClient({ transactions, nomeEmpresa }: { transactions: 
                                                     <Paperclip size={14} />
                                                 </button>
                                             )}
+                                            <span>{tx.description}</span>
+                                        </td>
+                                        <td className={`px-6 py-4 font-medium ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                            {tx.type === 'income' ? 'Entrada' : 'Saída'}
+                                        </td>
+                                        <td className={`px-6 py-4 font-bold ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                            {Number(tx.amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                         </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
+                                    <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
                                         Nenhum lançamento encontrado.
                                     </td>
                                 </tr>

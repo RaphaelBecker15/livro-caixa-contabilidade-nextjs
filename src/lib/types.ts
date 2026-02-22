@@ -22,20 +22,11 @@ export type Transacao = {
     description: string
     amount: number
     type: 'income' | 'expense'
-    categoryId: string
     companyId: string
     workspaceId: string
     userId: string
     attachments: string[]
     deletedAt?: string | null
-}
-
-export type Categoria = {
-    id: string
-    name: string
-    type: 'income' | 'expense'
-    active: boolean
-    workspaceId: string
 }
 
 export type Empresa = {

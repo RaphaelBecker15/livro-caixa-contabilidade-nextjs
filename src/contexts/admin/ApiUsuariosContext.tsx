@@ -12,12 +12,15 @@ type UsuariosContextType = {
     modalEditarAberto: boolean
     modalExcluirAberto: boolean
 
+    busca: string
+
     abrirModalEditar: (usuario: Usuario) => void
     abrirModalExcluir: (usuario: Usuario) => void
     fecharModais: () => void
     adicionarUsuario: (usuario: Usuario) => void
     salvarEdicao: (dadosAtualizados: Usuario) => Promise<void>
     excluirUsuario: (id: string) => Promise<void>
+    setBusca: (busca: string) => void
 }
 
 
@@ -38,6 +41,7 @@ export function UsuariosProvider({children, initialData}: {children: ReactNode, 
     const [usuarioEmEdicao, setUsuarioEmEdicao] = useState<Usuario | null>(null)
     const [modalEditarAberto, setModalEditarAberto] = useState(false)
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false)
+    const [busca, setBusca] = useState('')
 
     const abrirModalEditar = (usuario: Usuario) => {
         setUsuarioEmEdicao(usuario)
@@ -109,12 +113,14 @@ export function UsuariosProvider({children, initialData}: {children: ReactNode, 
             usuarioEmEdicao,
             modalEditarAberto,
             modalExcluirAberto,
+            busca,
             abrirModalEditar,
             abrirModalExcluir,
             fecharModais,
             adicionarUsuario,
             salvarEdicao,
-            excluirUsuario
+            excluirUsuario,
+            setBusca
         }}>
             {children}
         </ApiUsuariosContext.Provider>

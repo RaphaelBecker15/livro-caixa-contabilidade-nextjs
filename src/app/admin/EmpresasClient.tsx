@@ -8,7 +8,16 @@ import { Empresa } from "@/lib/types";
 
 export function EmpresasClient() {
     
-    const { empresas, empresaEmEdicao } = useEmpresas()
+    const { empresas, busca, empresaEmEdicao } = useEmpresas()
+
+    const empresasFiltradas = empresas.filter(emp => {
+        if (!busca) return true
+        const termo = busca.toLowerCase()
+        return (
+            emp.name.toLowerCase().includes(termo) ||
+            emp.cnpj.includes(busca)
+        )
+    })
 
     return (
         <>
@@ -22,8 +31,8 @@ export function EmpresasClient() {
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                    {empresas.length > 0 ? (
-                        empresas.map((empresa: Empresa) => (
+                    {empresasFiltradas.length > 0 ? (
+                        empresasFiltradas.map((empresa: Empresa) => (
                             <tr key={empresa.id} className="hover:bg-slate-50/50 transition-colors">
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-3">

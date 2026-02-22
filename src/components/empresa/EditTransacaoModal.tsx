@@ -4,15 +4,13 @@ import ModalTransaction from "@/components/ModalTransaction";
 import { useTransacoes } from "@/contexts/empresa/ApiTransacoesContext";
 import { useState } from "react";
 import { Transacao } from "@/lib/types";
-import { FileUpload } from "@/components/empresa/FileUpload"
-import { createClient } from "@/lib/supabase/client"
-import { X, FileText, Image } from "lucide-react"
+import { FileUpload } from "@/components/empresa/FileUpload";
+import { createClient } from "@/lib/supabase/client";
+import { X, FileText, Image } from "lucide-react";
+import { toast } from "react-toastify";
 
-interface EditTransacaoModalProps {
-    categorias: { id: string, name: string }[]
-}
 
-export function EditTransacaoModal({ categorias }: EditTransacaoModalProps) {
+export function EditTransacaoModal() {
 
     const supabase = createClient()
 
@@ -24,7 +22,6 @@ export function EditTransacaoModal({ categorias }: EditTransacaoModalProps) {
         description: transacaoEmEdicao?.description ?? "",
         amount: transacaoEmEdicao?.amount ?? 0,
         type: transacaoEmEdicao?.type ?? "income",
-        categoryId: transacaoEmEdicao?.categoryId ?? ""
     })
 
     const [files, setFiles] = useState<File[]>([])
@@ -44,25 +41,43 @@ export function EditTransacaoModal({ categorias }: EditTransacaoModalProps) {
         setLoading(true)
 
         const novosAnexos: string[] = []
-        for (const file of files) {
-            const ext = file.name.split('.').pop()
-            const nomeBase = file.name.replace(`.${ext}`, '').replace(/[^a-zA-Z0-9._-]/g, '_')
-            const path = `${transacaoEmEdicao.companyId}/${nomeBase}_${Date.now()}.${ext}`
 
-            const { error: uploadError } = await supabase.storage
-                .from('attachments')
-                .upload(path, file)
-            if (uploadError) throw uploadError
-            novosAnexos.push(path)
+        try {
+            const anexosRemovidos = transacaoEmEdicao.attachments?.filter(
+                path => !anexosExistentes.includes(path)
+            ) ?? []
+
+            if (anexosRemovidos.length > 0) {
+                await supabase.storage.from('attachments').remove(anexosRemovidos)
+            }
+
+            for (const file of files) {
+                const ext = file.name.split('.').pop()
+                const nomeBase = file.name.replace(`.${ext}`, '').replace(/[^a-zA-Z0-9._-]/g, '_')
+                const path = `${transacaoEmEdicao.companyId}/${nomeBase}_${Date.now()}.${ext}`
+
+                const { error: uploadError } = await supabase.storage
+                    .from('attachments')
+                    .upload(path, file)
+
+                if (uploadError) throw uploadError
+                novosAnexos.push(path)
+            }
+
+            await salvarEdicao({
+                ...transacaoEmEdicao,
+                ...form,
+                amount: parseFloat(String(form.amount)),
+                attachments: [...anexosExistentes, ...novosAnexos]
+            })
+        } catch {
+            if (novosAnexos.length > 0) {
+                await supabase.storage.from('attachments').remove(novosAnexos)
+            }
+            toast.error('Erro ao salvar transação. Tente novamente.')
+        } finally {
+            setLoading(false)
         }
-
-        await salvarEdicao({
-            ...transacaoEmEdicao,
-            ...form,
-            amount: parseFloat(String(form.amount)),
-            attachments: [...anexosExistentes, ...novosAnexos]
-        })
-        setLoading(false)
     }
 
     const handleClose = () => {
@@ -92,14 +107,6 @@ export function EditTransacaoModal({ categorias }: EditTransacaoModalProps) {
                     <select value={form.type} onChange={e => setForm(prev => ({ ...prev, type: e.target.value as Transacao['type'] }))} className="cursor-pointer w-full px-3 py-2 border border-slate-300 rounded-md outline-none">
                         <option value="income">Entrada</option>
                         <option value="expense">Saída</option>
-                    </select>
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Categoria</label>
-                    <select value={form.categoryId} onChange={e => setForm(prev => ({ ...prev, categoryId: e.target.value }))} className="cursor-pointer w-full px-3 py-2 border border-slate-300 rounded-md outline-none">
-                        {categorias.map(cat => (
-                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                        ))}
                     </select>
                 </div>
                 <div className="md:col-span-2 space-y-2">

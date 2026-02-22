@@ -4,7 +4,6 @@ import { Plus, Save } from "lucide-react";
 import ModalTransaction from "@/components/ModalTransaction";
 import { createClient } from "@/lib/supabase/client";
 import { useTransacoes } from "@/contexts/empresa/ApiTransacoesContext";
-import { Categoria } from "@/lib/types";
 import { FileUpload } from "@/components/empresa/FileUpload"
 import { toast } from "react-toastify";
 
@@ -12,10 +11,9 @@ interface AddTransactionButtonProps {
     companyId: string
     workspaceId: string
     userId: string
-    categorias: Categoria[]
 }
 
-export function AddTransactionButton({ companyId, workspaceId, userId, categorias }: AddTransactionButtonProps) {
+export function AddTransactionButton({ companyId, workspaceId, userId }: AddTransactionButtonProps) {
     const supabase = createClient()
     const { adicionarTransacao } = useTransacoes()
 
@@ -29,7 +27,6 @@ export function AddTransactionButton({ companyId, workspaceId, userId, categoria
         description: '',
         amount: '',
         type: 'income',
-        categoryId: categorias[0]?.id ?? ''
     })
 
     const [files, setFiles] = useState<File[]>([])
@@ -37,15 +34,16 @@ export function AddTransactionButton({ companyId, workspaceId, userId, categoria
     const handleClose = () => {
         setOpenModal(false)
         setFiles([])
-        setForm({ date: dataHoje, description: '', amount: '', type: 'income', categoryId: categorias[0]?.id ?? '' })
+        setForm({ date: dataHoje, description: '', amount: '', type: 'income' })
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
 
+        const attachmentPaths: string[] = []
+
         try {
-            const attachmentPaths: string[] = []
             for (const file of files) {
                 const ext = file.name.split('.').pop()
                 const nomeBase = file.name.replace(`.${ext}`, '').replace(/[^a-zA-Z0-9._-]/g, '_')
@@ -66,7 +64,6 @@ export function AddTransactionButton({ companyId, workspaceId, userId, categoria
                     description: form.description,
                     amount: parseFloat(form.amount),
                     type: form.type,
-                    categoryId: form.categoryId,
                     companyId,
                     workspaceId,
                     userId,
@@ -80,8 +77,11 @@ export function AddTransactionButton({ companyId, workspaceId, userId, categoria
             adicionarTransacao(transacao)
             toast.success('Transação criada com sucesso!')
             setOpenModal(false)
-            setForm({ date: dataHoje, description: '', amount: '', type: 'income', categoryId: categorias[0]?.id ?? '' })
+            setForm({ date: dataHoje, description: '', amount: '', type: 'income' })
         } catch {
+            if (attachmentPaths.length > 0) {
+                await supabase.storage.from('attachments').remove(attachmentPaths)
+            }
             toast.error('Erro ao criar transação. Tente novamente.')
         } finally {
             setLoading(false)
@@ -113,18 +113,6 @@ export function AddTransactionButton({ companyId, workspaceId, userId, categoria
                         <select value={form.type} onChange={e => setForm(prev => ({ ...prev, type: e.target.value }))} className="cursor-pointer w-full px-3 py-2 border border-slate-300 rounded-md outline-none">
                             <option value="income">Entrada</option>
                             <option value="expense">Saída</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Categoria</label>
-                        <select value={form.categoryId} onChange={e => setForm(prev => ({ ...prev, categoryId: e.target.value }))} className="cursor-pointer w-full px-3 py-2 border border-slate-300 rounded-md outline-none">
-                            {categorias.length > 0 ? (
-                                categorias.map(cat => (
-                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                                ))
-                            ) : (
-                                <option disabled>Nenhuma categoria cadastrada</option>
-                            )}
                         </select>
                     </div>
                     <div className="md:col-span-2">

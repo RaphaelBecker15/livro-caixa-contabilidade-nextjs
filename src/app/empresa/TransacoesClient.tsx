@@ -7,7 +7,7 @@ import { Transacao } from "@/lib/types";
 import { useState, useEffect } from "react";
 import { RelatorioButton } from "@/components/RelatorioButton";
 
-export function TransacoesClient({ categorias, nomeEmpresa }: { categorias: { id: string, name: string }[], nomeEmpresa: string }) {
+export function TransacoesClient({ nomeEmpresa }: { nomeEmpresa: string }) {
 
     const { transacoes, transacaoEmEdicao, mesSelecionado, setMesSelecionado } = useTransacoes()
 
@@ -52,7 +52,6 @@ export function TransacoesClient({ categorias, nomeEmpresa }: { categorias: { id
                         transacoesFiltradas={transacoesFiltradas}
                         mesSelecionado={mesSelecionado}
                         nomeEmpresa={nomeEmpresa}
-                        categorias={categorias}
                     />
                 </div>
                 <div className="flex items-center gap-3">
@@ -76,7 +75,6 @@ export function TransacoesClient({ categorias, nomeEmpresa }: { categorias: { id
                         <tr>
                             <th className="px-6 py-4 font-semibold text-slate-700">Data</th>
                             <th className="px-6 py-4 font-semibold text-slate-700">Descrição</th>
-                            <th className="px-6 py-4 font-semibold text-slate-700">Categoria</th>
                             <th className="px-6 py-4 font-semibold text-slate-700">Tipo</th>
                             <th className="px-6 py-4 font-semibold text-slate-700 text-right">Valor</th>
                             <th className="px-6 py-4 font-semibold text-slate-700 text-right">Ação</th>
@@ -88,11 +86,6 @@ export function TransacoesClient({ categorias, nomeEmpresa }: { categorias: { id
                                 <tr key={tx.id} className="hover:bg-slate-50/50 transition-colors">
                                     <td className="px-6 py-4 font-medium text-sm">{new Date(tx.date + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
                                     <td className="px-6 py-4 font-medium text-sm">{tx.description}</td>
-                                    <td className="px-6 py-4">
-                                        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
-                                            {categorias.find(cat => cat.id === tx.categoryId)?.name ?? 'Sem categoria'}
-                                        </span>
-                                    </td>
                                     <td className={`px-6 py-4 font-medium ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
                                         {tx.type === 'income' ? 'Entrada' : 'Saída'}
                                     </td>
@@ -106,7 +99,7 @@ export function TransacoesClient({ categorias, nomeEmpresa }: { categorias: { id
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
+                                <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
                                     Nenhum lançamento encontrado.
                                 </td>
                             </tr>
@@ -138,7 +131,7 @@ export function TransacoesClient({ categorias, nomeEmpresa }: { categorias: { id
                     </div>
                 </div>
             )}
-            <EditTransacaoModal key={`edit-${transacaoEmEdicao?.id ?? 'novo'}`} categorias={categorias}/>
+            <EditTransacaoModal key={`edit-${transacaoEmEdicao?.id ?? 'novo'}`}/>
             <ExcluirTransacaoModal key={`exclude-${transacaoEmEdicao?.id ?? 'novo'}`} onExcluir={handleExcluirTransacao}/>
         </>
     )

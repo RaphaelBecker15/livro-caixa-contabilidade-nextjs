@@ -20,10 +20,7 @@ export default async function LivroCaixa({ params }: PageProps) {
 
     const { data: transacoes } = await supabase
         .from('Transaction')
-        .select(`
-            *,
-            category:categoryId (name)
-        `)
+        .select('*')
         .eq('companyId', id)
         .is('deletedAt', null)
         .order('date', { ascending: false })

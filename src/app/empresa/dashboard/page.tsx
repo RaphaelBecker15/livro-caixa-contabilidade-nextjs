@@ -25,12 +25,6 @@ export default async function Dashboard() {
         .is('deletedAt', null)
         .order('date', { ascending: false })
 
-    const { data: categorias } = await supabase
-        .from('Category')
-        .select('*')
-        .eq('workspaceId', workspaceId)
-        .eq('active', true)
-
     return (
         <TransacoesProvider initialData={transacoes ?? []}>
             <div className="space-y-6">
@@ -42,7 +36,7 @@ export default async function Dashboard() {
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
-                        <AddTransactionButton companyId={companyId} workspaceId={workspaceId} userId={user!.id} categorias={categorias ?? []}/>
+                        <AddTransactionButton companyId={companyId} workspaceId={workspaceId} userId={user!.id}/>
                     </div>
                 </div>
 
@@ -53,7 +47,7 @@ export default async function Dashboard() {
 
                 {/* Transactions Table */}
                 <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                    <TransacoesClient categorias={categorias ?? []} nomeEmpresa={empresa?.name ?? ''}/>
+                    <TransacoesClient nomeEmpresa={empresa?.name ?? ''}/>
                 </div>
             </div>
         </TransacoesProvider>

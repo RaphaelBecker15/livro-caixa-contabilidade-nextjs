@@ -8,7 +8,17 @@ import { Usuario } from "@/lib/types";
 
 export function UsuariosClient() {
     
-    const { usuarios, usuarioEmEdicao } = useUsuarios()
+    const { usuarios, busca, usuarioEmEdicao } = useUsuarios()
+
+    const usuariosFiltrados = usuarios.filter(usr => {
+        if (!busca) return true
+        const termo = busca.toLowerCase()
+        return (
+            usr.name.toLowerCase().includes(termo) ||
+            usr.email.toLowerCase().includes(termo) ||
+            usr.role.toLowerCase().includes(termo)
+        )
+    })
 
     return (
         <>
@@ -23,8 +33,8 @@ export function UsuariosClient() {
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                    {usuarios.length > 0 ? (
-                        usuarios.map((user: Usuario) => (
+                    {usuariosFiltrados.length > 0 ? (
+                        usuariosFiltrados.map((user: Usuario) => (
                             <tr key={user.id} className="hover:bg-slate-50/50 transition-colors">
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-3">

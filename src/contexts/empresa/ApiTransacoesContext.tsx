@@ -73,7 +73,6 @@ export function TransacoesProvider({ children, initialData  }: { children: React
                     description: dadosAtualizados.description,
                     amount: dadosAtualizados.amount,
                     type: dadosAtualizados.type,
-                    categoryId: dadosAtualizados.categoryId,
                     attachments: dadosAtualizados.attachments,
                 })
                 .eq('id', dadosAtualizados.id)
@@ -93,6 +92,14 @@ export function TransacoesProvider({ children, initialData  }: { children: React
 
     const excluirTransacao = async (id: string, onSuccess?: () => void) => {
         try {
+            const transacao = transacoes.find(t => t.id === id)
+
+            if (transacao?.attachments && transacao.attachments.length > 0) {
+                await supabase.storage
+                    .from('attachments')
+                    .remove(transacao.attachments)
+            }
+            
             const { error } = await supabase
                 .from('Transaction')
                 .update({ deletedAt: new Date().toISOString() })
