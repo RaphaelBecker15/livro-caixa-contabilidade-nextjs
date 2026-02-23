@@ -3,6 +3,7 @@ import { TransacoesProvider } from "@/contexts/empresa/ApiTransacoesContext";
 import { AddTransactionButton } from "@/components/empresa/AddTransactionButton";
 import { TransacoesClient } from "@/app/empresa/TransacoesClient";
 import { StatsCards } from "@/components/empresa/StatsCards";
+import { RelatorioButtonWrapper } from "@/components/empresa/RelatorioButtonWrapper";
 
 export default async function Dashboard() {
 
@@ -29,13 +30,10 @@ export default async function Dashboard() {
         <TransacoesProvider initialData={transacoes ?? []}>
             <div className="space-y-6">
                 {/* Header */}
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <div>
-                            <h1 className="text-2xl font-bold text-slate-900">Meu Livro Caixa</h1>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <h1 className="text-2xl font-bold text-slate-900">Meu Livro Caixa</h1>
+                    <div className="flex flex-row-reverse justify-end md:justify-center items-center md:flex-row gap-3">
+                        <RelatorioButtonWrapper nomeEmpresa={empresa?.name ?? ''} />
                         <AddTransactionButton companyId={companyId} workspaceId={workspaceId} userId={user!.id}/>
                     </div>
                 </div>

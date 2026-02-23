@@ -22,7 +22,7 @@ export function UsuariosClient() {
 
     return (
         <>
-            <table className="w-full text-left text-sm">
+            <table className="w-full min-w-[600px] text-left text-sm">
                 <thead className="bg-slate-50 border-b border-slate-200">
                     <tr>
                         <th className="px-6 py-4 font-semibold text-slate-700">Nome</th>

@@ -89,18 +89,12 @@ export function LivroCaixaClient({ transactions, nomeEmpresa }: { transactions: 
 
             {/* Transactions Table */}
             <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/50 flex justify-between items-center">
+                <div className="px-2 py-2 md:px-6 md:py-4 border-b border-slate-200 bg-slate-50/50 flex justify-center md:justify-between items-center">
                     <div className="flex items-center gap-4">
-                        <h3 className="font-semibold text-slate-800">Lançamentos</h3>
-                        <RelatorioButton
-                            transacoes={transactions}
-                            transacoesFiltradas={transacoesFiltradas}
-                            mesSelecionado={mesSelecionado}
-                            nomeEmpresa={nomeEmpresa}
-                        />
+                        <h3 className="font-semibold text-slate-800 hidden md:block">Lançamentos</h3>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <div className="flex rounded-lg border border-gray-200 overflow-hidden text-sm font-semibold">
+                    <div className="flex items-center gap-2">
+                        <div className="flex rounded-lg border border-gray-200 overflow-hidden text-xs font-semibold">
                             <button onClick={() => setTipoFiltro('all')} className={`cursor-pointer px-3 py-2 transition-colors ${tipoFiltro === 'all' ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}`}>
                                 Todos
                             </button>
@@ -111,11 +105,11 @@ export function LivroCaixaClient({ transactions, nomeEmpresa }: { transactions: 
                                 Saídas
                             </button>
                         </div>
-                        <input type="month" value={mesSelecionado} onChange={e => setMesSelecionado(e.target.value)} className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm outline-none transition-all" />
+                        <input type="month" value={mesSelecionado} onChange={e => setMesSelecionado(e.target.value)} className="bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-xs font-semibold text-gray-700 shadow-sm outline-none transition-all" />
                     </div>
                 </div>
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm">
+                <div className="overflow-x-auto w-full">
+                    <table className="w-full min-w-[600px] text-left text-sm">
                         <thead className="bg-slate-50 border-b border-slate-200">
                             <tr>
                                 <th className="px-6 py-4 font-semibold text-slate-700">Data</th>
@@ -160,23 +154,26 @@ export function LivroCaixaClient({ transactions, nomeEmpresa }: { transactions: 
                     </table>
                 </div>
                 {totalPaginas > 1 && (
-                    <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between text-sm">
-                        <span className="text-slate-500">
+                    <div className="px-4 py-3 border-t border-slate-200 flex items-center justify-between text-xs md:text-sm gap-2">
+                        <span className="text-slate-500 hidden sm:block">
                             Mostrando {((pagina - 1) * itensPorPagina) + 1} a {Math.min(pagina * itensPorPagina, transacoesFiltradas.length)} de {transacoesFiltradas.length} lançamentos
                         </span>
-                        <div className="flex items-center gap-2">
+                        <span className="text-slate-500 sm:hidden">
+                            {pagina} / {totalPaginas}
+                        </span>
+                        <div className="flex items-center gap-1 md:gap-2">
                             <button
                                 onClick={() => setPagina(prev => Math.max(prev - 1, 1))}
                                 disabled={pagina === 1}
-                                className="cursor-pointer px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                className="cursor-pointer px-2 md:px-3 py-1 md:py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                             >
                                 Anterior
                             </button>
-                            <span className="font-medium text-slate-700">{pagina} / {totalPaginas}</span>
+                            <span className="font-medium text-slate-700 hidden sm:block">{pagina} / {totalPaginas}</span>
                             <button
                                 onClick={() => setPagina(prev => Math.min(prev + 1, totalPaginas))}
                                 disabled={pagina === totalPaginas}
-                                className="cursor-pointer px-3 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                className="cursor-pointer px-2 md:px-3 py-1 md:py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                             >
                                 Próxima
                             </button>
