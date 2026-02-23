@@ -5,9 +5,8 @@ import { EditTransacaoModal } from "@/components/empresa/EditTransacaoModal";
 import { ExcluirTransacaoModal } from "@/components/empresa/ExcluirTransacaoModal";
 import { Transacao } from "@/lib/types";
 import { useState } from "react";
-import { RelatorioButton } from "@/components/RelatorioButton";
 
-export function TransacoesClient({ nomeEmpresa }: { nomeEmpresa: string }) {
+export function TransacoesClient() {
 
     const { transacoes, transacaoEmEdicao, mesSelecionado, setMesSelecionado } = useTransacoes()
 

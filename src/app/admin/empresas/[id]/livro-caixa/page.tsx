@@ -32,7 +32,7 @@ export default async function LivroCaixa({ params }: PageProps) {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="flex items-left flex-col justify-between md:flex-row md:items-center gap-4">
+            <div className="flex items-left flex-col justify-between md:flex-row md:items-center gap-4 ">
                 <div className="flex items-center gap-1 md:gap-4">
                     <Link href={"/admin/empresas"}>
                         <div className="p-2 hover:bg-slate-200 rounded-full transition-colors cursor-pointer">
