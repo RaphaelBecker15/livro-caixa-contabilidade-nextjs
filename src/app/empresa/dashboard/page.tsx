@@ -45,7 +45,7 @@ export default async function Dashboard() {
 
                 {/* Transactions Table */}
                 <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                    <TransacoesClient nomeEmpresa={empresa?.name ?? ''}/>
+                    <TransacoesClient/>
                 </div>
             </div>
         </TransacoesProvider>

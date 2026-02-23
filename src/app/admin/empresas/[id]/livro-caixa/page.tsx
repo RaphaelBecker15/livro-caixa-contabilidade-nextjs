@@ -52,7 +52,7 @@ export default async function LivroCaixa({ params }: PageProps) {
                 />
             </div>
 
-            <LivroCaixaClient transactions={transacoes ?? []} nomeEmpresa={empresa?.name ?? ''}/>
+            <LivroCaixaClient transactions={transacoes ?? []}/>
             
         </div>
     )
