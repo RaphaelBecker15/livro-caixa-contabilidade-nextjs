@@ -75,7 +75,6 @@ export function LivroCaixaClient({ transactions, nomeEmpresa }: { transactions: 
     )
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setPagina(1)
     }, [mesSelecionado, tipoFiltro])
 

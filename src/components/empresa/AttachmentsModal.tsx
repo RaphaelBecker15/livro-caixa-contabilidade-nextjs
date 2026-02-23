@@ -1,5 +1,5 @@
 "use client";
-import { X, FileText, Download, Image } from "lucide-react";
+import { X, FileText, Download, Image as ImageIcon } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 interface AttachmentsModalProps {
@@ -11,7 +11,7 @@ interface AttachmentsModalProps {
 
 const getFileIcon = (path: string) => {
     const ext = path.split('.').pop()?.toLowerCase()
-    if (['jpg', 'jpeg', 'png', 'webp'].includes(ext ?? '')) return <Image size={18} />
+    if (['jpg', 'jpeg', 'png', 'webp'].includes(ext ?? '')) return <ImageIcon size={18} />
     return <FileText size={18} />
 }
 

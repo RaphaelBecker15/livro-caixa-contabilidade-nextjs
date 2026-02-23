@@ -1,5 +1,5 @@
 "use client";
-import { UploadCloud, X, FileText, Image } from "lucide-react";
+import { UploadCloud, X, FileText, Image as ImageIcon } from "lucide-react";
 import { useRef } from "react";
 
 interface FileUploadProps {
@@ -11,7 +11,7 @@ const ALLOWED_TYPES = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'
 const MAX_SIZE_MB = 10
 
 const getFileIcon = (file: File) => {
-    if (file.type.startsWith('image/')) return <Image size={14} />
+    if (file.type.startsWith('image/')) return <ImageIcon size={14} />
     return <FileText size={14} />
 }
 

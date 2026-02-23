@@ -4,7 +4,7 @@ import { TransactionActionButtons } from "@/components/empresa/TransactionAction
 import { EditTransacaoModal } from "@/components/empresa/EditTransacaoModal";
 import { ExcluirTransacaoModal } from "@/components/empresa/ExcluirTransacaoModal";
 import { Transacao } from "@/lib/types";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { RelatorioButton } from "@/components/RelatorioButton";
 
 export function TransacoesClient({ nomeEmpresa }: { nomeEmpresa: string }) {
@@ -15,7 +15,6 @@ export function TransacoesClient({ nomeEmpresa }: { nomeEmpresa: string }) {
     const itensPorPagina = 10
 
     const [tipoFiltro, setTipoFiltro] = useState<'all' | 'income' | 'expense'>('all')
-    const [anexoAberto, setAnexoAberto] = useState<{ attachments: string[], descricao: string } | null>(null)
 
     const transacoesFiltradas = transacoes.filter(tx => {
         const pertenceMes = tx.date.startsWith(mesSelecionado)
@@ -28,11 +27,16 @@ export function TransacoesClient({ nomeEmpresa }: { nomeEmpresa: string }) {
         (pagina - 1) * itensPorPagina,
         pagina * itensPorPagina
     )
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+    
+    const handleSetMesSelecionado = (mes: string) => {
         setPagina(1)
-    }, [mesSelecionado, tipoFiltro])
+        setMesSelecionado(mes)
+    }
+
+    const handleSetTipoFiltro = (tipo: 'all' | 'income' | 'expense') => {
+        setPagina(1)
+        setTipoFiltro(tipo)
+    }
 
     const handleExcluirTransacao = () => {
         const itensDaProximaPagina = transacoesFiltradas.length - 1
@@ -56,17 +60,17 @@ export function TransacoesClient({ nomeEmpresa }: { nomeEmpresa: string }) {
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="flex rounded-lg border border-gray-200 overflow-hidden text-sm font-semibold">
-                        <button onClick={() => setTipoFiltro('all')} className={`cursor-pointer px-3 py-2 transition-colors ${tipoFiltro === 'all' ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}`}>
+                        <button onClick={() => handleSetTipoFiltro('all')} className={`cursor-pointer px-3 py-2 transition-colors ${tipoFiltro === 'all' ? 'bg-slate-900 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}`}>
                             Todos
                         </button>
-                        <button onClick={() => setTipoFiltro('income')} className={`cursor-pointer px-3 py-2 transition-colors ${tipoFiltro === 'income' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}`}>
+                        <button onClick={() => handleSetTipoFiltro('income')} className={`cursor-pointer px-3 py-2 transition-colors ${tipoFiltro === 'income' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}`}>
                             Entradas
                         </button>
-                        <button onClick={() => setTipoFiltro('expense')} className={`cursor-pointer px-3 py-2 transition-colors ${tipoFiltro === 'expense' ? 'bg-rose-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}`}>
+                        <button onClick={() => handleSetTipoFiltro('expense')} className={`cursor-pointer px-3 py-2 transition-colors ${tipoFiltro === 'expense' ? 'bg-rose-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50'}`}>
                             Saídas
                         </button>
                     </div>
-                    <input type="month" value={mesSelecionado} onChange={e => setMesSelecionado(e.target.value)} className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm outline-none transition-all" />
+                    <input type="month" value={mesSelecionado} onChange={e => handleSetMesSelecionado(e.target.value)} className="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm outline-none transition-all" />
                 </div>
             </div>
             <div className="overflow-x-auto">

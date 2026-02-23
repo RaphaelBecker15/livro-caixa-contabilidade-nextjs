@@ -175,7 +175,7 @@ export function RelatorioButton({ transacoes, transacoesFiltradas, mesSelecionad
         })
 
         // Rodapé da tabela
-        const finalY = (doc as any).lastAutoTable.finalY + 6
+        const finalY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 6
         doc.setDrawColor(226, 232, 240)
         doc.line(14, finalY, pageWidth - 14, finalY)
         doc.setFontSize(9)
@@ -184,7 +184,7 @@ export function RelatorioButton({ transacoes, transacoesFiltradas, mesSelecionad
         doc.text(`${transacoesFiltradas.length} lançamento(s) no período`, 14, finalY + 8)
 
         // Paginação
-        const pageCount = (doc.internal as any).getNumberOfPages()
+        const pageCount = (doc.internal as unknown as { getNumberOfPages: () => number }).getNumberOfPages()
         for (let i = 1; i <= pageCount; i++) {
             doc.setPage(i)
             doc.setFontSize(8)
