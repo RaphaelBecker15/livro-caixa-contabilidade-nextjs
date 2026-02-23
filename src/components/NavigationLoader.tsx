@@ -8,7 +8,6 @@ export function NavigationLoader() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(false);
     }, [pathname]);
 
@@ -30,7 +29,7 @@ export function NavigationLoader() {
     if (!loading) return null;
 
     return (
-        <div className="fixed top-0 bottom-0 z-50 bg-slate-900/30 backdrop-blur-sm flex items-center justify-center" style={{ left: '256px', right: 0 }}>
+        <div className="fixed top-0 bottom-0 z-50 bg-slate-900/30 backdrop-blur-sm flex items-center justify-center left-0 md:left-64 right-0">
             <SpinLoader className="h-auto" />
         </div>
     );

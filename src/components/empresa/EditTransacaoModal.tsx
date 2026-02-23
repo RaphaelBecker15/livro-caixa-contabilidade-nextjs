@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Transacao } from "@/lib/types";
 import { FileUpload } from "@/components/empresa/FileUpload";
 import { createClient } from "@/lib/supabase/client";
-import { X, FileText, Image } from "lucide-react";
+import { X, FileText, Image as ImageIcon } from "lucide-react";
 import { toast } from "react-toastify";
 
 
@@ -117,7 +117,7 @@ export function EditTransacaoModal() {
                                 <div key={index} className="flex items-center gap-1.5 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-lg w-[160px] flex-shrink-0">
                                     <span className="flex-shrink-0 text-slate-500">
                                         {['jpg','jpeg','png','webp'].includes(path.split('.').pop() ?? '')
-                                            ? <Image size={14} />
+                                            ? <ImageIcon size={14} />
                                             : <FileText size={14} />
                                         }
                                     </span>
