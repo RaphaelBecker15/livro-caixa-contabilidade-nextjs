@@ -1,5 +1,5 @@
 "use client";
-import { LayoutDashboard, Building2, LogOut, CircleUserRound, UsersRound, Menu, X, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, Building2, LogOut, CircleUserRound, UsersRound, type LucideIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

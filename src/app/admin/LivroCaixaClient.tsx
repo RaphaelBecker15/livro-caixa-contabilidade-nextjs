@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Transacao } from "@/lib/types";
 import { Paperclip } from "lucide-react";
 import { AttachmentsModal } from "@/components/empresa/AttachmentsModal";
-import { RelatorioButton } from "@/components/RelatorioButton";
 
 interface StatCardProps {
     label: string
@@ -25,7 +24,7 @@ const StatCard = ({ label, value, icon: Icon, colorClass }: StatCardProps) => (
     </div>
 );
 
-export function LivroCaixaClient({ transactions, nomeEmpresa }: { transactions: Transacao[], nomeEmpresa: string }) {
+export function LivroCaixaClient({ transactions }: { transactions: Transacao[] }) {
 
     const [mesSelecionado, setMesSelecionado] = useState(() => {
         const hoje = new Date()
