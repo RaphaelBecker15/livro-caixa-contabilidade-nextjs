@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
     try {
+        const body = await request.json()
         const { id } = await request.json()
 
         const cookieStore = await cookies()
@@ -36,13 +37,36 @@ export async function POST(request: NextRequest) {
             process.env.SUPABASE_SERVICE_ROLE_KEY!
         )
 
-        const { data: usuario, error: userFetchError } = await supabaseAdmin
+        const { data: usuario } = await supabaseAdmin
             .from('User')
             .select('id')
             .eq('companyId', id)
             .single()
 
-        if (userFetchError) throw userFetchError
+        const { data: transacoes } = await supabaseAdmin
+            .from('Transaction')
+            .select('attachments')
+            .eq('companyId', id)
+            .is('deletedAt', null)
+
+        if (transacoes && transacoes.length > 0) {
+            const todosAnexos = transacoes
+                .flatMap((tx: { attachments?: string[] }) => tx.attachments ?? [])
+                .filter(Boolean)
+
+            if (todosAnexos.length > 0) {
+                await supabaseAdmin.storage
+                    .from('attachments')
+                    .remove(todosAnexos)
+            }
+        }
+
+        const { error: transacoesError } = await supabaseAdmin
+            .from('Transaction')
+            .update({ deletedAt: new Date().toISOString() })
+            .eq('companyId', id)
+
+        if (transacoesError) throw transacoesError
 
         const { error: empresaError } = await supabaseAdmin
             .from('Company')
@@ -58,9 +82,10 @@ export async function POST(request: NextRequest) {
 
         if (userError) throw userError
 
-        const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(usuario.id)
-
-        if (authError) throw authError
+        if (usuario) {
+            const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(usuario.id)
+            if (authError) throw authError
+        }
 
         return NextResponse.json({ success: true })
     } catch (error) {
