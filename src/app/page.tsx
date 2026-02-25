@@ -37,6 +37,7 @@ export default function Login() {
 
                 if (!response.ok) {
                     setErro('Usuário não encontrado.')
+                    setLoading(false)
                     return
                 }
 
@@ -50,18 +51,22 @@ export default function Login() {
 
             if (error) {
                 setErro('Email, usuário ou senha incorretos.')
+                setLoading(false)
                 return
             }
 
-            const role = data.user?.user_metadata?.role
+            const role = data.user?.app_metadata?.role
 
             switch (role) {
                 case 'super_admin': router.push('/admin/empresas'); break;
                 case 'admin': router.push('/admin/empresas'); break;
                 case 'empresa': router.push('/empresa/dashboard'); break;
-                default: setErro('Usuário sem permissão de acesso.')
+                default:
+                    setErro('Usuário sem permissão de acesso.')
+                    setLoading(false)
             }
-        } finally {
+        } catch {
+            setErro('Erro inesperado. Tente novamente.')
             setLoading(false)
         }
     }

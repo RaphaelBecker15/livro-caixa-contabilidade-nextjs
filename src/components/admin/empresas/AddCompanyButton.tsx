@@ -30,7 +30,7 @@ export function AddCompanyButton() {
 
         try {
             const { data: { user } } = await supabase.auth.getUser()
-            const workspaceId = user?.user_metadata?.workspaceId
+            const workspaceId = user?.app_metadata?.workspaceId
 
             const response = await fetch('/api/criar-empresa', {
                 method: 'POST',
