@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
 
         const { data: { user } } = await supabaseClient.auth.getUser()
         
-        if (!user || user.user_metadata?.role !== 'super_admin') {
+        if (!user || user.app_metadata?.role !== 'super_admin') {
             return NextResponse.json({ error: 'Sem permissão.' }, { status: 403 })
         }
 
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
         const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
             email,
             password,
-            user_metadata: {
+            app_metadata: {
                 role,
                 workspaceId
             },
