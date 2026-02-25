@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
         const body = await request.json()
         const { name, user_name, email, cnpj, password, workspaceId } = body
 
-        console.log('1. Dados recebidos:', { name, user_name, email, cnpj, workspaceId })
+        const cnpjLimpo = cnpj.replace(/\D/g, '')
 
         const cookieStore = await cookies()
         const supabaseClient = createServerClient(
@@ -39,15 +39,11 @@ export async function POST(request: NextRequest) {
             process.env.SUPABASE_SERVICE_ROLE_KEY!
         )
 
-        console.log('2. Usuário autenticado:', user?.id, user?.app_metadata?.role)
-
         const { data: empresa, error: empresaError } = await supabaseAdmin
             .from('Company')
-            .insert({ name, user_name, email, cnpj, workspaceId })
+            .insert({ name, user_name, email, cnpj: cnpjLimpo, workspaceId })
             .select()
             .single()
-
-            console.log('3. Empresa criada:', empresa?.id)
 
         if (empresaError) {
             if (empresaError.code === '23505') {
@@ -75,8 +71,6 @@ export async function POST(request: NextRequest) {
             email_confirm: true
         })
 
-        console.log('4. Auth user criado:', authData?.user?.id)
-
         if (authError) throw authError
 
         const { error: userError } = await supabaseAdmin.from('User').insert({
@@ -89,14 +83,10 @@ export async function POST(request: NextRequest) {
             companyId: empresa.id
         })
 
-        console.log('5. User inserido com sucesso')
-
         if (userError) throw userError
 
         return NextResponse.json({ success: true, empresa: empresa })
     } catch (error) {
-        console.error('ERRO COMPLETO:', JSON.stringify(error))
-
         const message = error instanceof Error ? error.message : 'Erro desconhecido'
         return NextResponse.json({ error: message }, { status: 500 })
     }
