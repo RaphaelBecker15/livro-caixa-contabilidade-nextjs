@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
 
         const { data: { user } } = await supabaseClient.auth.getUser()
         
-        if (!user || !['super_admin', 'admin'].includes(user.user_metadata?.role)) {
+        if (!user || !['super_admin', 'admin'].includes(user.app_metadata?.role)) {
             return NextResponse.json({ error: 'Sem permissão.' }, { status: 403 })
         }
 

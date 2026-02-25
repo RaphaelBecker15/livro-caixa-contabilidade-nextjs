@@ -29,7 +29,7 @@ export async function proxy(request: NextRequest) {
     )
 
     const { data: { user } } = await supabase.auth.getUser()
-    const role = user?.user_metadata?.role
+    const role = user?.app_metadata?.role
 
     if (!user) {
         return NextResponse.redirect(new URL('/', request.url))

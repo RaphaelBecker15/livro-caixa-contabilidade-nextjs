@@ -10,8 +10,8 @@ export default async function Dashboard() {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
-    const companyId = user?.user_metadata?.companyId
-    const workspaceId = user?.user_metadata?.workspaceId
+    const companyId = user?.app_metadata?.companyId
+    const workspaceId = user?.app_metadata?.workspaceId
 
     const { data: empresa } = await supabase
         .from('Company')
