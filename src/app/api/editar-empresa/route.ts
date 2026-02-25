@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
         const { data: { user } } = await supabaseClient.auth.getUser()
         
-        if (!user || !['super_admin', 'admin'].includes(user.user_metadata?.role)) {
+        if (!user || !['super_admin', 'admin'].includes(user.app_metadata?.role)) {
             return NextResponse.json({ error: 'Sem permissão.' }, { status: 403 })
         }
 
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
 
         const { data: usuario, error: userFetchError } = await supabaseAdmin
             .from('User')
-            .select('id')
+            .select('id, workspaceId')
             .eq('companyId', id)
             .single()
 
@@ -60,7 +60,14 @@ export async function POST(request: NextRequest) {
 
         const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(
             usuario.id,
-            { email }
+            {
+                email,
+                app_metadata: {
+                    role: 'empresa',
+                    workspaceId: usuario.workspaceId,
+                    companyId: id
+                }
+            }
         )
 
         if (authError) throw authError
