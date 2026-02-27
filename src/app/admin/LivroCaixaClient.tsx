@@ -1,9 +1,10 @@
 "use client";
-import { TrendingUp, TrendingDown, Wallet, type LucideIcon } from "lucide-react";
+import { TrendingUp, TrendingDown, Wallet, Eye, type LucideIcon } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Transacao } from "@/lib/types";
+import { Transacao, Client } from "@/lib/types";
 import { Paperclip } from "lucide-react";
 import { AttachmentsModal } from "@/components/empresa/AttachmentsModal";
+import { ClienteInfoModal } from "@/components/ClienteInfoModal";
 
 interface StatCardProps {
     label: string
@@ -24,7 +25,12 @@ const StatCard = ({ label, value, icon: Icon, colorClass }: StatCardProps) => (
     </div>
 );
 
-export function LivroCaixaClient({ transactions }: { transactions: Transacao[] }) {
+export function LivroCaixaClient({ transactions, clientes }: {
+    transactions: Transacao[],
+    clientes: Client[]
+}) {
+
+    const [clienteAberto, setClienteAberto] = useState<Client | null>(null)
 
     const [mesSelecionado, setMesSelecionado] = useState(() => {
         const hoje = new Date()
@@ -114,6 +120,7 @@ export function LivroCaixaClient({ transactions }: { transactions: Transacao[] }
                                 <th className="px-6 py-4 font-semibold text-slate-700">Data</th>
                                 <th className="px-6 py-4 font-semibold text-slate-700">Descrição</th>
                                 <th className="px-6 py-4 font-semibold text-slate-700">Tipo</th>
+                                <th className="px-6 py-4 font-semibold text-slate-700">Cliente</th>
                                 <th className="px-6 py-4 font-semibold text-slate-700">Valor</th>
                             </tr>
                         </thead>
@@ -137,6 +144,21 @@ export function LivroCaixaClient({ transactions }: { transactions: Transacao[] }
                                         <td className={`px-6 py-4 font-medium ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
                                             {tx.type === 'income' ? 'Entrada' : 'Saída'}
                                         </td>
+                                        <td className="px-6 py-4 text-slate-600 font-medium text-sm">
+                                            {(() => {
+                                                const cliente = clientes.find(c => c.id === tx.clientId)
+                                                if (!cliente) return '—'
+                                                return (
+                                                    <button
+                                                        onClick={() => setClienteAberto(cliente)}
+                                                        className="cursor-pointer flex items-center gap-1.5 text-slate-600 hover:text-blue-600 transition-colors"
+                                                    >
+                                                        <Eye size={14} />
+                                                        <span>{cliente.name}</span>
+                                                    </button>
+                                                )
+                                            })()}
+                                        </td>
                                         <td className={`px-6 py-4 font-bold ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
                                             {Number(tx.amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                         </td>
@@ -144,7 +166,7 @@ export function LivroCaixaClient({ transactions }: { transactions: Transacao[] }
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
+                                    <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
                                         Nenhum lançamento encontrado.
                                     </td>
                                 </tr>
@@ -186,6 +208,13 @@ export function LivroCaixaClient({ transactions }: { transactions: Transacao[] }
                     onClose={() => setAnexoAberto(null)}
                     attachments={anexoAberto.attachments}
                     descricao={anexoAberto.descricao}
+                />
+            )}
+
+            {clienteAberto && (
+                <ClienteInfoModal
+                    cliente={clienteAberto}
+                    onClose={() => setClienteAberto(null)}
                 />
             )}
         </>

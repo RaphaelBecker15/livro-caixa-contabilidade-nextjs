@@ -65,21 +65,27 @@ export async function POST(request: NextRequest) {
             .from('Transaction')
             .update({ deletedAt: new Date().toISOString() })
             .eq('companyId', id)
-
         if (transacoesError) throw transacoesError
+
+
+        const { error: clientesError } = await supabaseAdmin
+            .from('Client')
+            .update({ deletedAt: new Date().toISOString() })
+            .eq('companyId', id)
+        if (clientesError) throw clientesError
+
 
         const { error: empresaError } = await supabaseAdmin
             .from('Company')
             .update({ deletedAt: new Date().toISOString() })
             .eq('id', id)
-
         if (empresaError) throw empresaError
+
 
         const { error: userError } = await supabaseAdmin
             .from('User')
             .update({ deletedAt: new Date().toISOString() })
             .eq('companyId', id)
-
         if (userError) throw userError
 
         if (usuario) {

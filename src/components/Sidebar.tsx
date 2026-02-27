@@ -1,5 +1,5 @@
 "use client";
-import { LayoutDashboard, Building2, LogOut, CircleUserRound, UsersRound, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, Building2, LogOut, CircleUserRound, UsersRound, Users, type LucideIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -55,6 +55,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                 <nav className='flex-1 p-4 space-y-2'>
                     {role === 'empresa' && <NavItem to="/empresa/dashboard" icon={LayoutDashboard} label="Dashboard" currentPath={pathname}></NavItem>}
+                    {role === 'empresa' && <NavItem to="/empresa/clientes" icon={Users} label="Clientes" currentPath={pathname} onClick={onClose} />}
                     {(role === 'super_admin' || role === 'admin') && <NavItem to="/admin/empresas" icon={Building2} label="Empresas" currentPath={pathname}></NavItem>}
                     {role === 'super_admin' && <NavItem to="/admin/usuarios" icon={UsersRound} label="Usuários" currentPath={pathname}></NavItem>}
                 </nav>

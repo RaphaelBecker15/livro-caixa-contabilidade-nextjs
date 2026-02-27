@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { LivroCaixaClient } from "@/app/admin/LivroCaixaClient";
 import { RelatorioButton } from "@/components/RelatorioButton";
+import { Client } from "@/lib/types";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -29,6 +30,13 @@ export default async function LivroCaixa({ params }: PageProps) {
         .is('deletedAt', null)
         .order('date', { ascending: false })
 
+    const { data: clientes } = await supabase
+        .from('Client')
+        .select('*')
+        .eq('companyId', id)
+        .is('deletedAt', null)
+        .order('name', { ascending: true })
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -52,7 +60,7 @@ export default async function LivroCaixa({ params }: PageProps) {
                 />
             </div>
 
-            <LivroCaixaClient transactions={transacoes ?? []}/>
+            <LivroCaixaClient transactions={transacoes ?? []} clientes={(clientes ?? []) as Client[]}/>
             
         </div>
     )

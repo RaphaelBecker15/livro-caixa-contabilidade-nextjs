@@ -3,12 +3,18 @@ import { useTransacoes } from "@/contexts/empresa/ApiTransacoesContext";
 import { TransactionActionButtons } from "@/components/empresa/TransactionActionButtons";
 import { EditTransacaoModal } from "@/components/empresa/EditTransacaoModal";
 import { ExcluirTransacaoModal } from "@/components/empresa/ExcluirTransacaoModal";
-import { Transacao } from "@/lib/types";
+import { Transacao, Client } from "@/lib/types";
 import { useState } from "react";
+import { Eye } from "lucide-react";
+import { ClienteInfoModal } from "@/components/ClienteInfoModal";
 
-export function TransacoesClient() {
+export function TransacoesClient({ clientes }: {
+    clientes: Client[]
+}) {
 
     const { transacoes, transacaoEmEdicao, mesSelecionado, setMesSelecionado } = useTransacoes()
+
+    const [clienteAberto, setClienteAberto] = useState<Client | null>(null)
 
     const [pagina, setPagina] = useState(1)
     const itensPorPagina = 10
@@ -73,6 +79,7 @@ export function TransacoesClient() {
                             <th className="px-6 py-4 font-semibold text-slate-700">Data</th>
                             <th className="px-6 py-4 font-semibold text-slate-700">Descrição</th>
                             <th className="px-6 py-4 font-semibold text-slate-700">Tipo</th>
+                            <th className="px-6 py-4 font-semibold text-slate-700">Cliente</th>
                             <th className="px-6 py-4 font-semibold text-slate-700 text-right">Valor</th>
                             <th className="px-6 py-4 font-semibold text-slate-700 text-right">Ação</th>
                         </tr>
@@ -86,6 +93,21 @@ export function TransacoesClient() {
                                     <td className={`px-6 py-4 font-medium ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
                                         {tx.type === 'income' ? 'Entrada' : 'Saída'}
                                     </td>
+                                    <td className="px-6 py-4 text-slate-600 font-medium text-sm">
+                                        {(() => {
+                                            const cliente = clientes.find(c => c.id === tx.clientId)
+                                            if (!cliente) return '—'
+                                            return (
+                                                <button
+                                                    onClick={() => setClienteAberto(cliente)}
+                                                    className="cursor-pointer flex items-center gap-1.5 text-slate-600 hover:text-blue-600 transition-colors"
+                                                >
+                                                    <Eye size={14} />
+                                                    <span>{cliente.name}</span>
+                                                </button>
+                                            )
+                                        })()}
+                                    </td>
                                     <td className={`px-6 py-4 text-right font-bold ${tx.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
                                         {Number(tx.amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                     </td>
@@ -96,7 +118,7 @@ export function TransacoesClient() {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
+                                <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
                                     Nenhum lançamento encontrado.
                                 </td>
                             </tr>
@@ -131,8 +153,14 @@ export function TransacoesClient() {
                     </div>
                 </div>
             )}
-            <EditTransacaoModal key={`edit-${transacaoEmEdicao?.id ?? 'novo'}`}/>
+            <EditTransacaoModal key={`edit-${transacaoEmEdicao?.id ?? 'novo'}`} clientes={clientes}/>
             <ExcluirTransacaoModal key={`exclude-${transacaoEmEdicao?.id ?? 'novo'}`} onExcluir={handleExcluirTransacao}/>
+            {clienteAberto && (
+                <ClienteInfoModal
+                    cliente={clienteAberto}
+                    onClose={() => setClienteAberto(null)}
+                />
+            )}
         </>
     )
 }

@@ -11,9 +11,10 @@ interface AddTransactionButtonProps {
     companyId: string
     workspaceId: string
     userId: string
+    clientes: { id: string, name: string, documentType: string, document: string }[]
 }
 
-export function AddTransactionButton({ companyId, workspaceId, userId }: AddTransactionButtonProps) {
+export function AddTransactionButton({ companyId, workspaceId, userId, clientes }: AddTransactionButtonProps) {
     const supabase = createClient()
     const { adicionarTransacao } = useTransacoes()
 
@@ -27,6 +28,7 @@ export function AddTransactionButton({ companyId, workspaceId, userId }: AddTran
         description: '',
         amount: '',
         type: 'income',
+        clientId: '',
     })
 
     const [files, setFiles] = useState<File[]>([])
@@ -34,7 +36,7 @@ export function AddTransactionButton({ companyId, workspaceId, userId }: AddTran
     const handleClose = () => {
         setOpenModal(false)
         setFiles([])
-        setForm({ date: dataHoje, description: '', amount: '', type: 'income' })
+        setForm({ date: dataHoje, description: '', amount: '', type: 'income', clientId: '' })
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -67,7 +69,8 @@ export function AddTransactionButton({ companyId, workspaceId, userId }: AddTran
                     companyId,
                     workspaceId,
                     userId,
-                    attachments: attachmentPaths
+                    attachments: attachmentPaths,
+                    clientId: form.clientId || null,
                 })
                 .select()
                 .single()
@@ -77,7 +80,7 @@ export function AddTransactionButton({ companyId, workspaceId, userId }: AddTran
             adicionarTransacao(transacao)
             toast.success('Transação criada com sucesso!')
             setOpenModal(false)
-            setForm({ date: dataHoje, description: '', amount: '', type: 'income' })
+            setForm({ date: dataHoje, description: '', amount: '', type: 'income', clientId: '' })
         } catch {
             if (attachmentPaths.length > 0) {
                 await supabase.storage.from('attachments').remove(attachmentPaths)
@@ -113,6 +116,23 @@ export function AddTransactionButton({ companyId, workspaceId, userId }: AddTran
                         <select value={form.type} onChange={e => setForm(prev => ({ ...prev, type: e.target.value }))} className="cursor-pointer w-full px-3 py-2 border border-slate-300 rounded-md outline-none">
                             <option value="income">Entrada</option>
                             <option value="expense">Saída</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-semibold text-slate-700 mb-1">
+                            Cliente <span className="text-slate-400 font-normal">(opcional)</span>
+                        </label>
+                        <select
+                            value={form.clientId}
+                            onChange={e => setForm(prev => ({ ...prev, clientId: e.target.value }))}
+                            className="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none transition-all bg-white"
+                        >
+                            <option value="">Selecione um cliente...</option>
+                            {clientes.map(c => (
+                                <option key={c.id} value={c.id}>
+                                    {c.name} ({c.documentType})
+                                </option>
+                            ))}
                         </select>
                     </div>
                     <div className="md:col-span-2">
