@@ -4,6 +4,7 @@ import { AddTransactionButton } from "@/components/empresa/AddTransactionButton"
 import { TransacoesClient } from "@/app/empresa/TransacoesClient";
 import { StatsCards } from "@/components/empresa/StatsCards";
 import { RelatorioButtonWrapper } from "@/components/empresa/RelatorioButtonWrapper";
+import { Client } from "@/lib/types";
 
 export default async function Dashboard() {
 
@@ -26,6 +27,13 @@ export default async function Dashboard() {
         .is('deletedAt', null)
         .order('date', { ascending: false })
 
+    const { data: clientes } = await supabase
+        .from('Client')
+        .select('*')
+        .eq('companyId', companyId)
+        .is('deletedAt', null)
+        .order('name', { ascending: true })
+
     return (
         <TransacoesProvider initialData={transacoes ?? []}>
             <div className="space-y-6">
@@ -34,7 +42,7 @@ export default async function Dashboard() {
                     <h1 className="text-2xl font-bold text-slate-900">Meu Livro Caixa</h1>
                     <div className="flex flex-row-reverse justify-end md:justify-center items-center md:flex-row gap-3">
                         <RelatorioButtonWrapper nomeEmpresa={empresa?.name ?? ''} />
-                        <AddTransactionButton companyId={companyId} workspaceId={workspaceId} userId={user!.id}/>
+                        <AddTransactionButton companyId={companyId} workspaceId={workspaceId} userId={user!.id} clientes={clientes ?? []}/>
                     </div>
                 </div>
 
@@ -45,7 +53,7 @@ export default async function Dashboard() {
 
                 {/* Transactions Table */}
                 <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                    <TransacoesClient/>
+                    <TransacoesClient clientes={(clientes ?? []) as Client[]}/>
                 </div>
             </div>
         </TransacoesProvider>

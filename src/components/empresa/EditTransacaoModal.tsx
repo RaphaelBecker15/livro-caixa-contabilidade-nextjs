@@ -9,8 +9,11 @@ import { createClient } from "@/lib/supabase/client";
 import { X, FileText, Image as ImageIcon } from "lucide-react";
 import { toast } from "react-toastify";
 
+interface EditTransacaoModalProps {
+    clientes: { id: string, name: string, documentType: string }[]
+}
 
-export function EditTransacaoModal() {
+export function EditTransacaoModal({ clientes }: EditTransacaoModalProps) {
 
     const supabase = createClient()
 
@@ -22,6 +25,7 @@ export function EditTransacaoModal() {
         description: transacaoEmEdicao?.description ?? "",
         amount: transacaoEmEdicao?.amount ?? 0,
         type: transacaoEmEdicao?.type ?? "income",
+        clientId: transacaoEmEdicao?.clientId ?? "",
     })
 
     const [files, setFiles] = useState<File[]>([])
@@ -107,6 +111,23 @@ export function EditTransacaoModal() {
                     <select value={form.type} onChange={e => setForm(prev => ({ ...prev, type: e.target.value as Transacao['type'] }))} className="cursor-pointer w-full px-3 py-2 border border-slate-300 rounded-md outline-none">
                         <option value="income">Entrada</option>
                         <option value="expense">Saída</option>
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-1">
+                        Cliente <span className="text-slate-400 font-normal">(opcional)</span>
+                    </label>
+                    <select
+                        value={form.clientId ?? ''}
+                        onChange={e => setForm(prev => ({ ...prev, clientId: e.target.value }))}
+                        className="text-slate-600 font-medium w-full px-4 py-2 border border-slate-300 rounded-lg outline-none transition-all bg-white"
+                    >
+                        <option value="">Selecione um cliente...</option>
+                        {clientes.map(c => (
+                            <option key={c.id} value={c.id}>
+                                {c.name} ({c.documentType})
+                            </option>
+                        ))}
                     </select>
                 </div>
                 <div className="md:col-span-2 space-y-2">

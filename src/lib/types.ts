@@ -16,6 +16,26 @@ export type Usuario = {
     companyId: string | null
 }
 
+export type Client = {
+    id: string
+    companyId: string
+    workspaceId: string
+    document: string
+    documentType: 'CPF' | 'CNPJ'
+    name: string
+    phone?: string | null
+    email?: string | null
+    cep?: string | null
+    logradouro?: string | null
+    bairro?: string | null
+    numero?: string | null
+    complemento?: string | null
+    municipio?: string | null
+    estado?: string | null
+    deletedAt?: string | null
+    createdAt?: string
+}
+
 export type Transacao = {
     id: string
     date: string
@@ -26,6 +46,8 @@ export type Transacao = {
     workspaceId: string
     userId: string
     attachments: string[]
+    clientId?: string | null
+    client?: Client | null
     deletedAt?: string | null
 }
 
