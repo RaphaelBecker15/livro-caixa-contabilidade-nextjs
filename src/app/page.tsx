@@ -78,9 +78,6 @@ export default function Login() {
                 {/* Header */}
                 <div className="px-8 py-8 flex flex-col items-center">
                     <Image src="/logo-grupo-rezende.png" alt="Rezende" width={300} height={300} />
-                    <div className="text-center">
-                        <h1 className="text-xl font-bold text-white">Grupo Rezende</h1>
-                    </div>
                 </div>
 
                 {/* Form */}
