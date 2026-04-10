@@ -3,7 +3,6 @@ import { TransacoesProvider } from "@/contexts/empresa/ApiTransacoesContext";
 import { AddTransactionButton } from "@/components/empresa/AddTransactionButton";
 import { TransacoesClient } from "@/app/empresa/TransacoesClient";
 import { StatsCards } from "@/components/empresa/StatsCards";
-import { RelatorioButtonWrapper } from "@/components/empresa/RelatorioButtonWrapper";
 import { Client } from "@/lib/types";
 
 export default async function Dashboard() {
@@ -41,19 +40,18 @@ export default async function Dashboard() {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <h1 className="text-2xl font-bold text-slate-900">Meu Livro Caixa</h1>
                     <div className="flex flex-row-reverse justify-end md:justify-center items-center md:flex-row gap-3">
-                        <RelatorioButtonWrapper nomeEmpresa={empresa?.name ?? ''} />
                         <AddTransactionButton companyId={companyId} workspaceId={workspaceId} userId={user!.id} clientes={clientes ?? []}/>
                     </div>
                 </div>
 
-                {/* Stats Cards (Specific to this company) */}
+                {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <StatsCards/>
                 </div>
 
                 {/* Transactions Table */}
                 <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                    <TransacoesClient clientes={(clientes ?? []) as Client[]}/>
+                    <TransacoesClient clientes={(clientes ?? []) as Client[]} nomeEmpresa={empresa?.name ?? ''}/>
                 </div>
             </div>
         </TransacoesProvider>
