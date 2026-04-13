@@ -2,7 +2,6 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { LivroCaixaClient } from "@/app/admin/LivroCaixaClient";
-import { RelatorioButton } from "@/components/RelatorioButton";
 import { Client } from "@/lib/types";
 
 interface PageProps {
@@ -14,8 +13,6 @@ export default async function LivroCaixa({ params }: PageProps) {
     const { id } = await params
     const supabase = await createClient()
 
-    const hoje = new Date()
-    const mesAtual = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`
 
     const { data: empresa } = await supabase
         .from('Company')
@@ -52,15 +49,9 @@ export default async function LivroCaixa({ params }: PageProps) {
                         <p className="text-sm text-slate-500">CNPJ: {empresa?.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5")}</p>
                     </div>
                 </div>
-                <RelatorioButton
-                    transacoes={transacoes ?? []}
-                    transacoesFiltradas={transacoes ?? []}
-                    mesSelecionado={mesAtual}
-                    nomeEmpresa={empresa?.name ?? ''}
-                />
             </div>
 
-            <LivroCaixaClient transactions={transacoes ?? []} clientes={(clientes ?? []) as Client[]}/>
+            <LivroCaixaClient transactions={transacoes ?? []} clientes={(clientes ?? []) as Client[]} nomeEmpresa={empresa?.name ?? ''}/>
             
         </div>
     )
