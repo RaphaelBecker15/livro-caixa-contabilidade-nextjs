@@ -5,6 +5,7 @@ import { Transacao, Client } from "@/lib/types";
 import { AttachmentsModal } from "@/components/empresa/AttachmentsModal";
 import { ClienteInfoModal } from "@/components/ClienteInfoModal";
 import { RelatorioButton } from "@/components/RelatorioButton";
+import { DownloadAnexosButton } from "@/components/DownloadAnexosButton";
 
 type SortField = 'date' | 'type' | 'client' | 'amount'
 type SortDir = 'asc' | 'desc'
@@ -208,6 +209,10 @@ export function LivroCaixaClient({ transactions, clientes, nomeEmpresa }: {
                             nomeEmpresa={nomeEmpresa}
                             clientes={clientes}
                             descricaoFiltros={descricaoFiltros}
+                        />
+                        <DownloadAnexosButton
+                            transacoesSelecionadas={selecionados}
+                            transacoesFiltradas={transacoesFiltradas}
                         />
                     </div>
                 </div>
