@@ -75,7 +75,7 @@ export function AddCompanyButton() {
                     </div>
                     <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-1">Usuário</label>
-                        <input required type="text" value={form.user_name} onChange={e => setForm(prev => ({ ...prev, user_name: e.target.value }))} className="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none transition-all font-mono" />
+                        <input required type="text" value={form.user_name} onChange={e => setForm(prev => ({ ...prev, user_name: e.target.value }))} className="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none transition-all" />
                     </div>
                     <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-1">Email</label>
@@ -83,11 +83,11 @@ export function AddCompanyButton() {
                     </div>
                     <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-1">CNPJ</label>
-                        <input required type="text" value={form.cnpj} onChange={e => setForm(prev => ({ ...prev, cnpj: e.target.value }))} className="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none transition-all font-mono" />
+                        <input required type="text" value={form.cnpj} onChange={e => setForm(prev => ({ ...prev, cnpj: e.target.value }))} className="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none transition-all" />
                     </div>
                     <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-1">Senha de acesso</label>
-                        <input required type="password" value={form.password} onChange={e => setForm(prev => ({ ...prev, password: e.target.value }))} className="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none transition-all font-mono" />
+                        <input required type="password" value={form.password} onChange={e => setForm(prev => ({ ...prev, password: e.target.value }))} className="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none transition-all" />
                     </div>
 
                     <div className="pt-4 flex justify-end gap-3">

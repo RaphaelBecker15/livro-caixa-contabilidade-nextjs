@@ -40,7 +40,7 @@ export function ClientesClient() {
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-slate-600 font-medium text-sm font-mono">
+                                    <td className="px-6 py-4 text-slate-600 font-medium text-sm">
                                         {cliente.documentType === 'CNPJ'
                                             ? cliente.document.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5")
                                             : cliente.document.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4")
