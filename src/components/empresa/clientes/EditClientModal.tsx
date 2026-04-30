@@ -133,7 +133,7 @@ export function EditClientModal() {
                         onChange={e => setForm(prev => ({ ...prev, document: formatDocument(e.target.value, prev.documentType) }))}
                         placeholder={form.documentType === 'CNPJ' ? '00.000.000/0000-00' : '000.000.000-00'}
                         maxLength={form.documentType === 'CNPJ' ? 18 : 14}
-                        className="text-slate-600 font-medium w-full px-4 py-2 border border-slate-300 rounded-lg outline-none transition-all font-mono" />
+                        className="text-slate-600 font-medium w-full px-4 py-2 border border-slate-300 rounded-lg outline-none transition-all" />
                 </div>
 
                 {/* Nome */}
@@ -155,7 +155,7 @@ export function EditClientModal() {
                         onChange={e => setForm(prev => ({ ...prev, phone: formatPhone(e.target.value) }))}
                         placeholder="+55 (00) 00000-0000"
                         maxLength={19}
-                        className="text-slate-600 font-medium w-full px-4 py-2 border border-slate-300 rounded-lg outline-none transition-all font-mono" />
+                        className="text-slate-600 font-medium w-full px-4 py-2 border border-slate-300 rounded-lg outline-none transition-all" />
                 </div>
 
                 {/* Email */}
@@ -191,7 +191,7 @@ export function EditClientModal() {
                                     }}
                                     placeholder="00000-000"
                                     maxLength={9}
-                                    className="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none transition-all font-mono" />
+                                    className="w-full px-4 py-2 border border-slate-300 rounded-lg outline-none transition-all" />
                                 {loadingCep && <p className="text-xs text-slate-400 mt-1">Buscando CEP...</p>}
                             </div>
                             <div>

@@ -8,6 +8,7 @@ import { Transacao, Client } from "@/lib/types";
 import { useState, useMemo } from "react";
 import { Eye, ChevronUp, ChevronDown, ChevronsUpDown, SlidersHorizontal, Paperclip, X } from "lucide-react";
 import { ClienteInfoModal } from "@/components/ClienteInfoModal";
+import { DownloadAnexosButton } from "@/components/DownloadAnexosButton";
 
 type SortField = 'date' | 'type' | 'client' | 'amount'
 type SortDir = 'asc' | 'desc'
@@ -189,6 +190,11 @@ export function TransacoesClient({ clientes, nomeEmpresa }: {
                         nomeEmpresa={nomeEmpresa}
                         clientes={clientes}
                         descricaoFiltros={descricaoFiltros}
+                    />
+
+                    <DownloadAnexosButton
+                        transacoesSelecionadas={selecionados}
+                        transacoesFiltradas={transacoesFiltradas}
                     />
                 </div>
             </div>

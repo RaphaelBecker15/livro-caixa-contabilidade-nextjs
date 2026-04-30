@@ -5,6 +5,7 @@ import { Transacao, Client } from "@/lib/types";
 import { AttachmentsModal } from "@/components/empresa/AttachmentsModal";
 import { ClienteInfoModal } from "@/components/ClienteInfoModal";
 import { RelatorioButton } from "@/components/RelatorioButton";
+import { DownloadAnexosButton } from "@/components/DownloadAnexosButton";
 
 type SortField = 'date' | 'type' | 'client' | 'amount'
 type SortDir = 'asc' | 'desc'
@@ -160,9 +161,9 @@ export function LivroCaixaClient({ transactions, clientes, nomeEmpresa }: {
         <>
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <StatCard label="Saldo Atual" value={balance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} icon={Wallet} colorClass="text-blue-600 bg-blue-50" />
                 <StatCard label="Entradas" value={totalEntradas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} icon={TrendingUp} colorClass="text-emerald-600 bg-emerald-50" />
                 <StatCard label="Saídas" value={totalSaidas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} icon={TrendingDown} colorClass="text-rose-600 bg-rose-50" />
+                <StatCard label="Saldo Atual" value={balance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} icon={Wallet} colorClass="text-blue-600 bg-blue-50" />
             </div>
 
             {/* Tabela */}
@@ -208,6 +209,10 @@ export function LivroCaixaClient({ transactions, clientes, nomeEmpresa }: {
                             nomeEmpresa={nomeEmpresa}
                             clientes={clientes}
                             descricaoFiltros={descricaoFiltros}
+                        />
+                        <DownloadAnexosButton
+                            transacoesSelecionadas={selecionados}
+                            transacoesFiltradas={transacoesFiltradas}
                         />
                     </div>
                 </div>

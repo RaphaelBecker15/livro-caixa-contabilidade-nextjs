@@ -79,11 +79,11 @@ export function AddUserButton() {
                     </div>
                     <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-1">Email</label>
-                        <input required type="text" value={form.email} onChange={e => setForm(prev => ({ ...prev, email: e.target.value }))} className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-black-500 outline-none transition-all font-mono"/>
+                        <input required type="text" value={form.email} onChange={e => setForm(prev => ({ ...prev, email: e.target.value }))} className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-black-500 outline-none transition-all"/>
                     </div>
                     <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-1">Senha</label>
-                        <input required type="text" value={form.password} onChange={e => setForm(prev => ({ ...prev, password: e.target.value }))} className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-black-500 outline-none transition-all font-mono"/>
+                        <input required type="text" value={form.password} onChange={e => setForm(prev => ({ ...prev, password: e.target.value }))} className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-black-500 outline-none transition-all"/>
                     </div>
                     <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-1">Função</label>

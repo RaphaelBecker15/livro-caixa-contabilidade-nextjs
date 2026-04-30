@@ -72,7 +72,7 @@ export function ClienteInfoModal({ cliente, onClose }: ClienteInfoModalProps) {
                                     <p>{cliente.logradouro}, {cliente.numero}{cliente.complemento ? ` - ${cliente.complemento}` : ''}</p>
                                     <p>{cliente.bairro}</p>
                                     <p>{cliente.municipio} - {cliente.estado}</p>
-                                    <p className="font-mono text-slate-500">CEP: {formatCep(cliente.cep)}</p>
+                                    <p className="text-slate-500">CEP: {formatCep(cliente.cep)}</p>
                                 </div>
                             </div>
                         </div>
