@@ -15,8 +15,8 @@ export default function Modal({isOpen, setModalOpen, setTittle, children}:ModalP
                 <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col animate-in fade-in zoom-in-95 duration-200" style={{ maxHeight: 'calc(100vh - 2rem)' }}>
                     <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl flex-shrink-0">
                         <h3 className="font-bold text-lg text-slate-800">{setTittle}</h3>
-                        <button onClick={setModalOpen} className="text-slate-400 hover:text-rose-500 p-1 rounded-full hover:bg-slate-200">
-                            <X size={20} className="cursor-pointer" />
+                        <button onClick={setModalOpen} className="text-slate-400 hover:text-rose-500 p-1 rounded-full hover:bg-slate-200 cursor-pointer">
+                            <X size={20} />
                         </button>
                     </div>
                     <div className="overflow-y-auto flex-1">
