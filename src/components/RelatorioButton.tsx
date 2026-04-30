@@ -137,32 +137,32 @@ export function RelatorioButton({
         const cardY = cursorY
         const cardW = (pageWidth - 28 - 8) / 3
 
-        doc.setFillColor(239, 246, 255)
-        doc.roundedRect(14, cardY, cardW, 24, 2, 2, 'F')
-        doc.setTextColor(37, 99, 235)
-        doc.setFontSize(7)
-        doc.setFont('helvetica', 'bold')
-        doc.text('SALDO ATUAL', 14 + cardW / 2, cardY + 8, { align: 'center' })
-        doc.setFontSize(10)
-        doc.text(formatCurrency(saldo), 14 + cardW / 2, cardY + 18, { align: 'center' })
-
         doc.setFillColor(240, 253, 244)
-        doc.roundedRect(14 + cardW + 4, cardY, cardW, 24, 2, 2, 'F')
+        doc.roundedRect(14, cardY, cardW, 24, 2, 2, 'F')
         doc.setTextColor(22, 163, 74)
         doc.setFontSize(7)
         doc.setFont('helvetica', 'bold')
-        doc.text('ENTRADAS DO PERÍODO', 14 + cardW + 4 + cardW / 2, cardY + 8, { align: 'center' })
+        doc.text('ENTRADAS DO PERÍODO', 14 + cardW / 2, cardY + 8, { align: 'center' })
         doc.setFontSize(10)
-        doc.text(formatCurrency(entradas), 14 + cardW + 4 + cardW / 2, cardY + 18, { align: 'center' })
+        doc.text(formatCurrency(entradas), 14 + cardW / 2, cardY + 18, { align: 'center' })
 
         doc.setFillColor(255, 241, 242)
-        doc.roundedRect(14 + (cardW + 4) * 2, cardY, cardW, 24, 2, 2, 'F')
+        doc.roundedRect(14 + cardW + 4, cardY, cardW, 24, 2, 2, 'F')
         doc.setTextColor(225, 29, 72)
         doc.setFontSize(7)
         doc.setFont('helvetica', 'bold')
-        doc.text('SAÍDAS DO PERÍODO', 14 + (cardW + 4) * 2 + cardW / 2, cardY + 8, { align: 'center' })
+        doc.text('SAÍDAS DO PERÍODO', 14 + cardW + 4 + cardW / 2, cardY + 8, { align: 'center' })
         doc.setFontSize(10)
-        doc.text(formatCurrency(saidas), 14 + (cardW + 4) * 2 + cardW / 2, cardY + 18, { align: 'center' })
+        doc.text(formatCurrency(saidas), 14 + cardW + 4 + cardW / 2, cardY + 18, { align: 'center' })
+
+        doc.setFillColor(239, 246, 255)
+        doc.roundedRect(14 + (cardW + 4) * 2, cardY, cardW, 24, 2, 2, 'F')
+        doc.setTextColor(37, 99, 235)
+        doc.setFontSize(7)
+        doc.setFont('helvetica', 'bold')
+        doc.text('SALDO ATUAL', 14 + (cardW + 4) * 2 + cardW / 2, cardY + 8, { align: 'center' })
+        doc.setFontSize(10)
+        doc.text(formatCurrency(saldo), 14 + (cardW + 4) * 2 + cardW / 2, cardY + 18, { align: 'center' })
 
         // Título tabela
         doc.setTextColor(15, 23, 42)
